@@ -7,6 +7,9 @@ const app = express();
 //引入user.js
 const users = require("./routers/api/users");
 
+//引入profiles.js
+const profiles = require("./routers/api/profiles");
+
 //DB config
 const db = require("./config/keys").mongoURI;
 
@@ -31,6 +34,7 @@ app.get("/", (req, res) => {
 
 // 使用routers
 app.use("/api/users", users);
+app.use("/api/profiles", profiles);
 
 const port = process.env.PORT || 5000;
 
