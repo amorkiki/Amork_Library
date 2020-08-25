@@ -107,7 +107,7 @@ router.delete(
       .then((profile) => {
         profile.save().then((profile) => res.json(profile));
       })
-      .catch((err) => res.status(404).res.json("删除失败啦~ >_<"));
+      .catch((err) => res.json(err));
   }
 );
 
