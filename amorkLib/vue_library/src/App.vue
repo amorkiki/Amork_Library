@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+<<<<<<< HEAD
     <img src="./assets/logo.png">
     <div>
       <p>
@@ -10,10 +11,14 @@
       <el-button>el-button</el-button>
     </div>
     <HelloWorld msg="Welcome to Your Vue.js App"/>
+=======
+    <router-view></router-view>
+>>>>>>> user
   </div>
 </template>
 
 <script>
+<<<<<<< HEAD
 import HelloWorld from './components/HelloWorld.vue'
 
 export default {
@@ -34,3 +39,11 @@ export default {
   margin-top: 60px;
 }
 </style>
+=======
+export default {
+  name: 'app'
+}
+</script>
+
+<style></style>
+>>>>>>> user
