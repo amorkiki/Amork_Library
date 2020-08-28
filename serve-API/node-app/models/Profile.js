@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 const ProfileSchema = new Schema({
   type: {
     type: String,
-    required: true,
   },
   b_name: {
     type: String,
@@ -19,7 +18,7 @@ const ProfileSchema = new Schema({
     type: String,
   },
   status: {
-    type: String,
+    type: Number,
   },
   remark: {
     type: String,
@@ -27,6 +26,9 @@ const ProfileSchema = new Schema({
   date: {
     type: Date,
     default: Date.now,
+  },
+  publish: {
+    type: String,
   },
 });
 

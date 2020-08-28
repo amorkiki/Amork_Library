@@ -14,10 +14,10 @@
         class="login_form"
       >
         <!-- 登录名 -->
-        <el-form-item prop="name">
+        <el-form-item prop="email">
           <el-input
             prefix-icon="iconfont icon-bussiness-man"
-            v-model="loginForm.name"
+            v-model="loginForm.email"
           ></el-input>
         </el-form-item>
         <!-- 密码 -->
@@ -44,15 +44,15 @@ export default {
     return {
       // 登录表单的数据绑定对象
       loginForm: {
-        name: 'amork',
+        email: 'admin@123.com',
         password: '123456'
       },
       // 表单验证
       loginFormRules: {
         // 验证用户名
-        name: [
-          { required: true, message: '请输入登录名', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度范围在3~10个字符', trigger: 'blur' }
+        email: [
+          { required: true, message: '请输入登录邮箱', trigger: 'blur' }
+          // { min: 3, max: 10, message: '长度范围在3~10个字符', trigger: 'blur' }
         ],
         // 验证密码
         password: [
@@ -75,7 +75,7 @@ export default {
           'users/login',
           this.loginForm
         )
-        // console.log(res)
+        console.log(res)
         if (res.meta.status !== 200) {
           return this.$message.error('哎呀>_<没有登录成功')
         } else {

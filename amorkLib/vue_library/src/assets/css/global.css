@@ -5,6 +5,14 @@ body,
   margin: 0;
   padding: 0;
 }
+.el-breadcrumb span {
+  font-size: 16px;
+  font-family: Marker Felt;
+  margin-bottom: 20px;
+}
+.el-card {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
+}
 .el-table .warning-row {
   background: oldlace;
 }
@@ -13,4 +21,5 @@ body,
 }
 .el-table {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-top: 15px;
 }

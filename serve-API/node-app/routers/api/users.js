@@ -7,6 +7,9 @@ const gravatar = require("gravatar");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
+const { findById } = require("../../models/User");
+const { query } = require("express");
+const { json } = require("body-parser");
 
 // $route GET api/users/test
 // @desc  返回请求的json数据
@@ -23,7 +26,7 @@ router.post("/register", (req, res, next) => {
   //查询数据库中是否拥有邮箱
   User.findOne({ email: req.body.email }).then((user) => {
     if (user) {
-      return res.status(400).json("邮箱已被注册");
+      return res.status(1).json("邮箱已被注册");
     } else {
       const avatar = gravatar.url("req.body.email", {
         s: "200",
@@ -36,9 +39,10 @@ router.post("/register", (req, res, next) => {
         avatar: avatar,
         password: req.body.password,
         identity: req.body.identity,
+        situation: req.body.situation,
       });
       // 给密码加密
-      bcrypt.hash(newUser.password, 10, function (err, hash) {
+      bcrypt.hash(newUser.password, 10, function(err, hash) {
         if (err) {
           return err;
         }
@@ -46,7 +50,7 @@ router.post("/register", (req, res, next) => {
         newUser
           .save()
           .then((user) => res.json(user))
-          .catch((err) => console.log(err));
+          .catch((err) => res.json(err));
       });
     }
   });
@@ -61,7 +65,7 @@ router.post("/login", (req, res) => {
   // 查询数据库
   User.findOne({ email }).then((user) => {
     if (!user) {
-      return res.status(404).json("用户不存在");
+      return res.json({ msg: "用户不存在", status: 400 });
     }
 
     // 密码匹配
@@ -70,25 +74,31 @@ router.post("/login", (req, res) => {
         const rule = {
           id: user.id,
           name: user.name,
+          email: user.email,
           avatar: user.avatar,
           identity: user.identity,
+          situation: user.situation,
         };
         jwt.sign(rule, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
           if (err) throw err;
           res.json({
-            success: true,
-            token: "Bearer " + token,
+            data: rule,
+            meta: {
+              success: true,
+              status: 200,
+              token: "Bearer " + token,
+            },
           });
         });
       } else {
-        return res.status(400).json("密码错误");
+        return res.json({ msg: "密码错误", status: 400 });
       }
     });
   });
 });
 
 // $route GET api/users/current
-// @desc  return current user
+// @desc  返回当前用户
 // @access private
 router.get(
   "/current",
@@ -99,8 +109,186 @@ router.get(
       name: req.user.name,
       email: req.user.email,
       identity: req.user.identity,
+      situation: user.situation,
+    });
+  }
+);
+// $route GET api/users/list
+// @desc  获取用户信息接口
+// @access private
+router.get(
+  "/list",
+  passport.authenticate("jwt", { session: false }),
+  // (req, res, nex) => {
+  // 验证参数
+  //   if (!req.query.pagenum || req.query.pagenum <= 0) {
+  //     return res.json({ meta: { msg: "pagenum出错啦" } });
+  //   }
+  //   if (!req.query.pagesize || req.query.pagesize <= 0) {
+  //     return res.json({ meta: { msg: "pagesize出错啦" } });
+  //   }
+  // },
+  (req, res) => {
+    User.find({
+      query: req.query.query,
+      pagenum: req.query.pagenum,
+      pagesize: req.query.pagesize,
+    })
+      .then((user) => {
+        if (!user) {
+          return res.json({ msg: "没找到任何内容呀@_@", status: 400 });
+        }
+        res.json(JSON.parse(JSON.stringify(user)));
+        // res.json(user);
+      })
+      .catch((err) => res.log(err));
+  }
+);
+
+// $route PUT api/users/:uId/situation/:type
+// @desc 修改用户状态
+// @access private
+router.put(
+  "/:id/situation/:situation",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    //请求头拿到的situation信息
+    //const result = req.params.situation;
+    //res.json(result);
+    const userSitu = {};
+    if (req.params.situation) {
+      //bug修复：直接用req.params.situation 赋值给userSitu.situation不起作用，
+      //因为situation定义的是boolean不是string
+      //用JSON.parse转换一下，使得格式变成any
+      userSitu.situation = JSON.parse(req.params.situation);
+      User.findOneAndUpdate(
+        { _id: req.params.id },
+        { $set: userSitu },
+        { returnOriginal: false }
+      )
+        .then((user) => res.json(user))
+        .catch((err) => res.json(err));
+    }
+  }
+);
+// $route PUT api/users/edit/:id
+// @desc 修改用户信息
+// @access private
+router.put(
+  "/edit/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const userInfoFields = {};
+    if (req.body.name) userInfoFields.name = req.body.name;
+    if (req.body.identity) userInfoFields.identity = req.body.identity;
+
+    User.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: userInfoFields },
+      { returnOriginal: false }
+    )
+      .then((user) => res.json(user))
+      .catch((err) => res.json(err));
+    // res.json({
+    //   data: userInfoFields,
+    //   meta: {
+    //     status: 200,
+    //     success: true,
+    //   },
+    // });
+  }
+);
+
+// $route POST api/users/add
+// @desc  添加用户信息接口
+// @access private
+router.post(
+  "/add",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    //查询数据库中是否拥有邮箱
+    User.findOne({ email: req.body.email }).then((user) => {
+      if (user) {
+        return res.json({
+          data: null,
+          meta: { msg: "该邮箱已被注册", status: 401 },
+        });
+      } else {
+        //  头像生成
+        const avatar = gravatar.url("req.body.email", {
+          s: "200",
+          r: "pg",
+          d: "mm",
+        });
+        const userFields = new User({
+          name: req.body.name,
+          email: req.body.email,
+          avatar: avatar,
+          password: req.body.password,
+          identity: req.body.identity,
+          situation: req.body.situation,
+        });
+        if (!req.body.identity) userFields.identity = "null";
+        if (!req.body.situation) userFields.situation = true;
+        // 密码加密
+        bcrypt.hash(userFields.password, 10, function(err, hash) {
+          if (err) {
+            return err;
+          }
+          userFields.password = hash;
+          userFields.save();
+          res.json({
+            data: userFields,
+            meta: {
+              success: true,
+              status: 200,
+            },
+          });
+          if (err) return res.json(err);
+          // .then((user) => res.json(JSON.parse(JSON.stringify(user))))
+          // .catch((err) => res.json(err));
+        });
+      }
     });
   }
 );
 
+// $route GET api/users/:id
+// @desc  获取用户信息接口
+// @access private
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.findOne({ _id: req.params.id })
+      .then((user) => {
+        if (!user) {
+          return res.json("没找到这条内容呀@_@");
+        }
+        const data = user;
+        res.json({
+          data,
+          meta: {
+            status: 200,
+            success: true,
+          },
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+);
+
+// $route DELETE api/users/:_id
+// @desc  删除用户信息接口
+// @access private
+router.delete(
+  "/delete/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    // console.log(req.params.id);
+    User.findOneAndRemove({ _id: req.params.id }, (user) => {
+      res.json(user);
+    }).catch((err) => console.log(err));
+  }
+);
 module.exports = router;

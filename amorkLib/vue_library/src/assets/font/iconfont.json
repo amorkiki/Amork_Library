@@ -6,6 +6,160 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "15838444",
+      "name": "close",
+      "font_class": "close1",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
+      "icon_id": "15838445",
+      "name": "check-item",
+      "font_class": "check-item",
+      "unicode": "e66f",
+      "unicode_decimal": 58991
+    },
+    {
+      "icon_id": "15838446",
+      "name": "calendar",
+      "font_class": "calendar",
+      "unicode": "e670",
+      "unicode_decimal": 58992
+    },
+    {
+      "icon_id": "15838458",
+      "name": "data-view",
+      "font_class": "data-view",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    },
+    {
+      "icon_id": "15838467",
+      "name": "elipsis",
+      "font_class": "elipsis",
+      "unicode": "e672",
+      "unicode_decimal": 58994
+    },
+    {
+      "icon_id": "15838485",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e674",
+      "unicode_decimal": 58996
+    },
+    {
+      "icon_id": "15838493",
+      "name": "link",
+      "font_class": "link",
+      "unicode": "e676",
+      "unicode_decimal": 58998
+    },
+    {
+      "icon_id": "15838497",
+      "name": "lock",
+      "font_class": "lock",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "11474242",
+      "name": "code",
+      "font_class": "code",
+      "unicode": "e6f2",
+      "unicode_decimal": 59122
+    },
+    {
+      "icon_id": "11488027",
+      "name": "customization",
+      "font_class": "customization",
+      "unicode": "e74f",
+      "unicode_decimal": 59215
+    },
+    {
+      "icon_id": "11488131",
+      "name": "shuffling-banner",
+      "font_class": "shuffling-banner",
+      "unicode": "e764",
+      "unicode_decimal": 59236
+    },
+    {
+      "icon_id": "11488152",
+      "name": "trade alert",
+      "font_class": "tradealert",
+      "unicode": "e76b",
+      "unicode_decimal": 59243
+    },
+    {
+      "icon_id": "15838423",
+      "name": "column-4",
+      "font_class": "column-4",
+      "unicode": "e664",
+      "unicode_decimal": 58980
+    },
+    {
+      "icon_id": "15838425",
+      "name": "add-circle",
+      "font_class": "add-circle",
+      "unicode": "e665",
+      "unicode_decimal": 58981
+    },
+    {
+      "icon_id": "15838427",
+      "name": "arrow-up-circle",
+      "font_class": "arrow-up-circle",
+      "unicode": "e666",
+      "unicode_decimal": 58982
+    },
+    {
+      "icon_id": "15838428",
+      "name": "arrow-right-circle",
+      "font_class": "arrow-right-circle",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "15838429",
+      "name": "arrow-down",
+      "font_class": "arrow-down",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "15838430",
+      "name": "ashbin",
+      "font_class": "ashbin1",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    },
+    {
+      "icon_id": "15838436",
+      "name": "arrow-double-left",
+      "font_class": "arrow-double-left",
+      "unicode": "e66a",
+      "unicode_decimal": 58986
+    },
+    {
+      "icon_id": "15838438",
+      "name": "arrow-double-right",
+      "font_class": "arrow-double-right",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
+      "icon_id": "15838441",
+      "name": "chart-bar",
+      "font_class": "chart-bar",
+      "unicode": "e66c",
+      "unicode_decimal": 58988
+    },
+    {
+      "icon_id": "15838442",
+      "name": "attachment",
+      "font_class": "attachment",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
       "icon_id": "11474234",
       "name": "component",
       "font_class": "component",
@@ -116,6 +270,13 @@
       "font_class": "vip",
       "unicode": "e776",
       "unicode_decimal": 59254
+    },
+    {
+      "icon_id": "16677229",
+      "name": "component",
+      "font_class": "component-copy",
+      "unicode": "e777",
+      "unicode_decimal": 59255
     },
     {
       "icon_id": "11474219",

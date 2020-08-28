@@ -2,8 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import './plugins/element.js'
-<<<<<<< HEAD
-=======
 // 导入全局样式表
 import '../src/assets/css/global.css'
 // 导入字体图标
@@ -11,6 +9,7 @@ import './assets/font/iconfont.css'
 
 // 引入axios包
 import axios from 'axios'
+
 // 配置请求的根路径
 axios.defaults.baseURL = 'http://localhost:5000/api/'
 
@@ -23,7 +22,6 @@ axios.interceptors.request.use(config => {
 
 // axios挂载到vue的原型对象上
 Vue.prototype.$http = axios
->>>>>>> user
 
 Vue.config.productionTip = false
 

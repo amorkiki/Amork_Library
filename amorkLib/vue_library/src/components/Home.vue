@@ -10,7 +10,8 @@
       <!-- 侧边导航 -->
       <el-aside :width="isCollapse ? '64px' : '220px'" class="aside_container">
         <div class="switch_btn" @click="toggerCollapse">
-          <i class="iconfont icon-column"></i>
+          <i v-if="isCollapse" class="iconfont icon-arrow-right"></i>
+          <i v-else class="iconfont icon-arrow-left"></i>
         </div>
         <!-- 侧边栏菜单部分 -->
         <el-menu
@@ -88,12 +89,12 @@ export default {
             {
               id: 21,
               sbm_name: 'booklist',
-              path: null
+              path: 'booklist'
             },
             {
               id: 22,
               sbm_name: 'category',
-              path: null
+              path: 'category'
             }
           ]
         },
@@ -105,12 +106,12 @@ export default {
             {
               id: 31,
               sbm_name: 'reading tracks',
-              path: null
+              path: 'readingtracks'
             },
             {
               id: 32,
               sbm_name: 'reading notes',
-              path: null
+              path: 'readingnotes'
             }
           ]
         },

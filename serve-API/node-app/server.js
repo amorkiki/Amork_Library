@@ -4,6 +4,10 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const app = express();
 
+//跨域问题
+// npm install cors
+app.use(require("cors")());
+
 //引入user.js
 const users = require("./routers/api/users");
 
@@ -23,13 +27,15 @@ mongoose
   .then(() => console.log("mongoDB connected"))
   .catch((error) => console.log(error));
 
+mongoose.set("useFindAndModify", false);
+
 // passport 初始化
 app.use(passport.initialize());
 // 引入passport.js代码，同时把上面const的passport传递
 require("./config/passport")(passport);
 
 app.get("/", (req, res) => {
-  res.send("hello");
+  res.send("hello hello");
 });
 
 // 使用routers

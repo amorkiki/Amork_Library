@@ -56,7 +56,8 @@
             <el-tooltip
               effect="light"
               content="edit"
-              placement="top"
+              place
+              ment="top"
               :enterable="false"
             >
               <el-button
@@ -163,7 +164,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     // 验证邮箱的规则
     var checkEmail = (rule, value, callback) => {
       const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
@@ -248,12 +249,12 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.getUserList()
   },
   methods: {
     // 获取用户列表
-    async getUserList () {
+    async getUserList() {
       const { data: res } = await this.$http.get('users/list', {
         params: this.queryInfo
       })
@@ -265,7 +266,7 @@ export default {
       // console.log(this.total)
     },
     // 表格状态颜色
-    tableRowClassName ({ row, rowIndex }) {
+    tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 0) {
         return 'success-row'
       } else if (rowIndex === 4) {
@@ -274,7 +275,7 @@ export default {
       return ''
     },
     // 切换situation状态栏
-    async changeSwitch (switchInfo) {
+    async changeSwitch(switchInfo) {
       console.log(switchInfo)
       const { data: res } = await this.$http.put(
         `users/${switchInfo._id}/situation/${switchInfo.situation}`
@@ -287,11 +288,11 @@ export default {
       this.$message.success('状态更新成功 *_*')
     },
     // 监听添加对话框的关闭, 关闭后重置表单
-    addDialogClosed () {
+    addDialogClosed() {
       this.$refs.addFormRef.resetFields()
     },
     // 点击按钮，添加新用户
-    addUser () {
+    addUser() {
       // 添加用户之前预验证
       this.$refs.addFormRef.validate(async valid => {
         // console.log(valid)
@@ -314,7 +315,7 @@ export default {
       })
     },
     // 点击按钮，修改用户
-    async showEditDialog (id) {
+    async showEditDialog(id) {
       // console.log(id)
       const { data: res } = await this.$http.get('/users/' + id)
       // console.log(res)
@@ -327,16 +328,19 @@ export default {
       this.editDialogVisible = true
     },
     // 监听 编辑用户对话框 的 关闭事件
-    editDialogClosed () {
+    editDialogClosed() {
       this.$refs.editFormRef.resetFields()
     },
     // 修改用户信息并提交
-    editUserInfo () {
+    editUserInfo() {
       this.$refs.editFormRef.validate(async valid => {
         // console.log(valid)
         if (!valid) return this.$message.error('用户信息编辑失败!!>_<')
         // 发起修改请求
-        const { data: res } = await this.$http.put('/users/edit/' + this.editForm._id, { name: this.editForm.name, identity: this.editForm.identity })
+        const { data: res } = await this.$http.put(
+          '/users/edit/' + this.editForm._id,
+          { name: this.editForm.name, identity: this.editForm.identity }
+        )
         console.log(res)
         // if (res.meta.status !== 200) {
         //   return this.$message.error('没能更新>_<')
@@ -348,15 +352,19 @@ export default {
       })
     },
     // 删除用户
-    async removeUserById (_id) {
+    async removeUserById(_id) {
       // console.log(_id)
       // 弹框提示
-      const confirmResult = await this.$confirm('确定要永久删除改用户信息嘛+_+?', '警告', {
-        confirmButtonText: 'yes',
-        cancelButtonText: 'no',
-        type: 'warning'
-      }).catch(err => err)
-      // console.log(confirmResult) 
+      const confirmResult = await this.$confirm(
+        '确定要永久删除改用户信息嘛+_+?',
+        '警告',
+        {
+          confirmButtonText: 'yes',
+          cancelButtonText: 'no',
+          type: 'warning'
+        }
+      ).catch(err => err)
+      // console.log(confirmResult)
       if (confirmResult !== 'confirm') {
         return this.$message.error('取消删除=_=')
       } else {
@@ -372,20 +380,4 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-.el-breadcrumb span {
-  font-size: 16px;
-  font-family: Marker Felt;
-  margin-bottom: 20px;
-}
-.el-card {
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
-}
-// 该样式也写在全局中
-.el-table .warning-row {
-  background: oldlace;
-}
-.el-table .success-row {
-  background: #f0f9eb;
-}
-</style>
+<style lang="less" scoped></style>
