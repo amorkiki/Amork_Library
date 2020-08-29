@@ -15,17 +15,22 @@
     <el-card class="box-card">
       <!-- 搜索&添加区域 -->
       <el-row :gutter="25">
-        <el-col :span="9">
+        <el-col :span="12">
           <el-input
             placeholder="searching box..."
-            v-model="queyInfo.query"
+            v-model="queryInfo.query"
             clearable
             @clear="getUserList"
           >
+            <el-select v-model="selected" slot="prepend" placeholder="请选择">
+              <el-option label="姓名" value="1"></el-option>
+              <el-option label="邮箱" value="2"></el-option>
+              <el-option label="身份" value="3"></el-option>
+            </el-select>
             <el-button
               slot="append"
               icon="el-icon-search"
-              @click="getUserList()"
+              @click="findUserList(selected)"
             ></el-button>
           </el-input>
         </el-col>
@@ -160,6 +165,70 @@
         yes
       </el-button>
     </el-dialog>
+    <!-- 查询图书信息弹出的对话框 -->
+    <el-dialog
+      title="Find Users +_+!"
+      :visible.sync="findDialogVisible"
+      width="90%"
+    >
+      <el-table :data="findUser">
+        <el-table-column type="index"> </el-table-column>
+        <el-table-column prop="name" label="NAME"> </el-table-column>
+        <el-table-column prop="email" label="EMAIL"> </el-table-column>
+        <el-table-column prop="identity" label="IDENTITY"> </el-table-column>
+        <!-- 状态栏 -->
+        <el-table-column label="STATUS">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.situation"
+              @change="changeSwitch(scope.row)"
+            ></el-switch>
+          </template>
+        </el-table-column>
+        <!-- 操作栏 -->
+        <el-table-column label="CONTROL">
+          <template slot-scope="scope">
+            <el-tooltip
+              effect="light"
+              content="edit"
+              place
+              ment="top"
+              :enterable="false"
+            >
+              <el-button
+                type="info"
+                icon="iconfont icon-editor"
+                size="mini"
+                @click="showEditDialog(scope.row._id)"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip
+              effect="dark"
+              content="delete"
+              placement="top"
+              :enterable="false"
+              ><el-button
+                type="danger"
+                icon="iconfont icon-ashbin"
+                size="mini"
+                @click="removeUserById(scope.row._id)"
+              ></el-button
+            ></el-tooltip>
+            <el-tooltip
+              effect="light"
+              content="skip to booklist"
+              placement="top"
+              :enterable="false"
+              ><el-button
+                type="warning"
+                icon="iconfont icon-Moneymanagement"
+                size="mini"
+              ></el-button
+            ></el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -176,7 +245,7 @@ export default {
     }
     return {
       // 获取用户列表的参数对象
-      queyInfo: {
+      queryInfo: {
         query: ''
       },
       // 保存请求回来的用户列表数据
@@ -246,7 +315,13 @@ export default {
             trigger: 'blur'
           }
         ]
-      }
+      },
+      // 已选中的查询方式
+      selected: '',
+      // 查询到的用户信息
+      findUser: [],
+      // 查询对话框的显示和隐藏
+      findDialogVisible: false
     }
   },
   created() {
@@ -255,15 +330,29 @@ export default {
   methods: {
     // 获取用户列表
     async getUserList() {
-      const { data: res } = await this.$http.get('users/list', {
-        params: this.queryInfo
-      })
+      const { data: res } = await this.$http.get('users/list')
       // console.log(res)
       if (!res) return this.$message.error('没拿到任何信息呀 >_<')
       this.userlist = res
       this.total = res.length
       // console.log(this.userlist)
       // console.log(this.total)
+    },
+    // 查询用户列表
+    async findUserList(selected) {
+      if (!this.queryInfo.query) {
+        return this.$message.error('请输入要查找的内容')
+      }
+      const { data: res } = await this.$http.get(
+        `users/find/${selected}/${this.queryInfo.query}`
+      )
+      console.log(res)
+      if (res.meta.status !== 200) {
+        return this.$message.error('没找到任何内容>_<')
+      }
+      this.findUser = res.data
+      console.log(this.findUser)
+      this.findDialogVisible = true
     },
     // 表格状态颜色
     tableRowClassName({ row, rowIndex }) {
@@ -316,6 +405,7 @@ export default {
     },
     // 点击按钮，修改用户
     async showEditDialog(id) {
+      this.findDialogVisible = false
       // console.log(id)
       const { data: res } = await this.$http.get('/users/' + id)
       // console.log(res)
@@ -380,4 +470,8 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.el-select {
+  width: 100px;
+}
+</style>
