@@ -36,7 +36,8 @@ router.post(
         // status: req.body.status,
         // remark: req.body.remark,
         // }
-        if (req.body.type) profileFields.type = req.body.type;
+        if (req.body.type)
+          profileFields.type = req.body.type[req.body.type.length - 1];
         if (req.body.b_name) profileFields.b_name = req.body.b_name;
         if (req.body.author) profileFields.author = req.body.author;
         if (req.body.isbn_num) profileFields.isbn_num = req.body.isbn_num;
@@ -64,14 +65,24 @@ router.post(
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
+  // (req, res, next) => {
+  //   // 参数验证;
+  //   if (!req.query.pagenum || req.query.pagenum <= 0)
+  //     return res.json(null, 400, "pagenum 参数错误");
+  //   if (!req.query.pagesize || req.query.pagesize <= 0)
+  //     return res.json(null, 400, "pagesize 参数错误");
+  //   next();
+  // },
   (req, res) => {
-    Profile.find()
+    Profile.find({
+      pagenum: req.params.pagenum,
+      pagesize: req.params.pagesize,
+    })
       .then((profile) => {
         if (!profile) {
-          return res.status(404).json("没找到任何内容呀@_@");
+          return res.json("没找到任何内容呀@_@");
         }
-
-        res.json(profile);
+        res.json(JSON.parse(JSON.stringify(profile)));
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -111,14 +122,16 @@ router.put(
   (req, res) => {
     const profileFields = {};
 
-    if (req.body.type) profileFields.type = req.body.type;
+    if (req.body.type)
+      profileFields.type = req.body.type[req.body.type.length - 1];
     if (req.body.b_name) profileFields.b_name = req.body.b_name;
     if (req.body.author) profileFields.author = req.body.author;
     if (req.body.isbn_num) profileFields.isbn_num = req.body.isbn_num;
-    // if (req.body.status) profileFields.status = req.body.status;
-    // if (req.body.remark) profileFields.remark = req.body.remark;
+    if (req.body.status) profileFields.status = req.body.status;
+    if (req.body.remark) profileFields.remark = req.body.remark;
     if (req.body.publish) profileFields.publish = req.body.publish;
 
+    // res.console.log(profileFields);
     Profile.findOneAndUpdate(
       { _id: req.params.id },
       { $set: profileFields },
@@ -139,6 +152,67 @@ router.delete(
     Profile.findOneAndRemove({ _id: req.params.id }, (profile) =>
       res.json(profile)
     ).catch((err) => res.json(err));
+  }
+);
+
+// $route GET api/profiles/find/:value
+// @desc  查询信息接口
+// @access private
+router.get(
+  "/find/:value/:query",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    if (req.params.value === "1") {
+      Profile.find({ b_name: req.params.query })
+        .then((profile) => {
+          if (!profile) {
+            return res.json("没找到这条内容呀@_@");
+          }
+          const data = profile;
+          res.json({
+            data,
+            meta: {
+              status: 200,
+              success: true,
+            },
+          });
+        })
+        .catch((err) => console.log(err));
+    }
+    if (req.params.value === "2") {
+      Profile.find({ author: req.params.query })
+        .then((profile) => {
+          if (!profile) {
+            return res.json("没找到这条内容呀@_@");
+          }
+          const data = profile;
+          res.json({
+            data,
+            meta: {
+              status: 200,
+              success: true,
+            },
+          });
+        })
+        .catch((err) => console.log(err));
+    }
+    if (req.params.value === "3") {
+      Profile.find({ type: req.params.query })
+        .then((profile) => {
+          if (!profile) {
+            return res.json("没找到这条内容呀@_@");
+          }
+          const data = profile;
+          res.json({
+            data,
+            meta: {
+              status: 200,
+              success: true,
+            },
+          });
+        })
+        .catch((err) => console.log(err));
+    }
   }
 );
 

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 // Create Schema
 const ProfileSchema = new Schema({
   type: {
-    type: String,
+    type: Array,
   },
   b_name: {
     type: String,

@@ -291,4 +291,66 @@ router.delete(
     }).catch((err) => console.log(err));
   }
 );
+
+// $route GET api/users/find/:value/:query
+// @desc  查询信息接口
+// @access private
+router.get(
+  "/find/:value/:query",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    if (req.params.value === "1") {
+      User.find({ name: req.params.query })
+        .then((user) => {
+          if (!user) {
+            return res.json("没找到这条内容呀@_@");
+          }
+          const data = user;
+          res.json({
+            data,
+            meta: {
+              status: 200,
+              success: true,
+            },
+          });
+        })
+        .catch((err) => console.log(err));
+    }
+    if (req.params.value === "2") {
+      User.find({ email: req.params.query })
+        .then((user) => {
+          if (!user) {
+            return res.json("没找到这条内容呀@_@");
+          }
+          const data = user;
+          res.json({
+            data,
+            meta: {
+              status: 200,
+              success: true,
+            },
+          });
+        })
+        .catch((err) => console.log(err));
+    }
+    if (req.params.value === "3") {
+      User.find({ identity: req.params.query })
+        .then((user) => {
+          if (!user) {
+            return res.json("没找到这条内容呀@_@");
+          }
+          const data = user;
+          res.json({
+            data,
+            meta: {
+              status: 200,
+              success: true,
+            },
+          });
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+);
+
 module.exports = router;

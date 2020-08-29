@@ -1,0 +1,95 @@
+[
+  {
+    "value": "Science",
+    "label": "理工",
+    "children": [
+      {
+        "value": "Nature",
+        "label": "自然",
+        "children": [
+          { "value": "physics", "label": "数理化" },
+          { "value": "medical", "label": "生物医药" },
+          { "value": "farming", "label": "农林" },
+          { "value": "astronomy", "label": "天文" }
+        ]
+      },
+      {
+        "value": "Computer",
+        "label": "互联网",
+        "children": [
+          { "value": "qiand", "label": "前端" },
+          { "value": "houd", "label": "后端" },
+          { "value": "media", "label": "多媒体" }
+        ]
+      }
+    ]
+  },
+  {
+    "value": "literature",
+    "label": "文艺",
+    "children": [
+      {
+        "value": "novel",
+        "label": "文学小说",
+        "children": [
+          { "value": "sanwen", "label": "散文" },
+          { "value": "xiaoshuo", "label": "小说" },
+          { "value": "zhuanji", "label": "传记" },
+          { "value": "pinglun", "label": "报刊评论" }
+        ]
+      },
+      {
+        "value": "language",
+        "label": "语言文字",
+        "children": [
+          { "value": "hanyu", "label": "汉语" },
+          { "value": "waiwen", "label": "外文" }
+        ]
+      },
+      {
+        "value": "arts",
+        "label": "艺术鉴赏",
+        "children": [
+          { "value": "shuhua", "label": "书画" },
+          { "value": "guwan", "label": "古玩" },
+          { "value": "shishang", "label": "时尚" }
+        ]
+      }
+    ]
+  },
+  {
+    "value": "social",
+    "label": "社科",
+    "children": [
+      {
+        "value": "history",
+        "label": "历史",
+        "children": [
+          { "value": "gudai", "label": "古代史" },
+          { "value": "xiandai", "label": "现代史" },
+          { "value": "tongshi", "label": "通史" },
+          { "value": "waiguoshi", "label": "外国历史" }
+        ]
+      },
+      {
+        "value": "politics",
+        "label": "政经法",
+        "children": [
+          { "value": "zhengzhi", "label": "政治" },
+          { "value": "jingji", "label": "经济" },
+          { "value": "falv", "label": "法律" }
+        ]
+      },
+      {
+        "value": "psychology",
+        "label": "心理学",
+        "children": [
+          { "value": "zhexue", "label": "哲学" },
+          { "value": "xinli", "label": "心理学" },
+          { "value": "zongjiao", "label": "宗教" }
+        ]
+      }
+    ]
+  },
+  { "value": "kaoshi", "label": "考试" }
+]
