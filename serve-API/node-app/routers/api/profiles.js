@@ -149,13 +149,11 @@ router.delete(
   "/delete/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-<<<<<<< HEAD
     Profile.findOneAndRemove({ _id: req.params.id })
       .then((profile) => {
         profile.save().then((profile) => res.json(profile));
       })
       .catch((err) => res.json(err));
-=======
     Profile.findOneAndRemove({ _id: req.params.id }, (profile) =>
       res.json(profile)
     ).catch((err) => res.json(err));
@@ -220,7 +218,6 @@ router.get(
         })
         .catch((err) => console.log(err));
     }
->>>>>>> master
   }
 );
 
