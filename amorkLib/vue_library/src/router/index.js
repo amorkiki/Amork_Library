@@ -5,6 +5,8 @@ import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
 import Users from '../components/Users.vue'
 import Booklist from '../components/Booklist.vue'
+import Readnotes from '../components/Readnotes.vue'
+import Addnotes from '../components/Addnotes.vue'
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -18,7 +20,9 @@ const router = new VueRouter({
       children: [
         { path: '/welcome', component: Welcome },
         { path: '/users', component: Users },
-        { path: '/booklist', component: Booklist }
+        { path: '/booklist', component: Booklist },
+        { path: '/readingnotes', component: Readnotes },
+        { path: '/readingnotes/add', component: Addnotes }
       ]
     }
   ]

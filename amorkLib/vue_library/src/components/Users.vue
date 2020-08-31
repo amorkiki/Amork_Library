@@ -233,7 +233,7 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     // 验证邮箱的规则
     var checkEmail = (rule, value, callback) => {
       const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
@@ -324,12 +324,12 @@ export default {
       findDialogVisible: false
     }
   },
-  created() {
+  created () {
     this.getUserList()
   },
   methods: {
     // 获取用户列表
-    async getUserList() {
+    async getUserList () {
       const { data: res } = await this.$http.get('users/list')
       // console.log(res)
       if (!res) return this.$message.error('没拿到任何信息呀 >_<')
@@ -339,7 +339,7 @@ export default {
       // console.log(this.total)
     },
     // 查询用户列表
-    async findUserList(selected) {
+    async findUserList (selected) {
       if (!this.queryInfo.query) {
         return this.$message.error('请输入要查找的内容')
       }
@@ -355,7 +355,7 @@ export default {
       this.findDialogVisible = true
     },
     // 表格状态颜色
-    tableRowClassName({ row, rowIndex }) {
+    tableRowClassName ({ row, rowIndex }) {
       if (rowIndex === 0) {
         return 'success-row'
       } else if (rowIndex === 4) {
@@ -364,7 +364,7 @@ export default {
       return ''
     },
     // 切换situation状态栏
-    async changeSwitch(switchInfo) {
+    async changeSwitch (switchInfo) {
       console.log(switchInfo)
       const { data: res } = await this.$http.put(
         `users/${switchInfo._id}/situation/${switchInfo.situation}`
@@ -377,11 +377,11 @@ export default {
       this.$message.success('状态更新成功 *_*')
     },
     // 监听添加对话框的关闭, 关闭后重置表单
-    addDialogClosed() {
+    addDialogClosed () {
       this.$refs.addFormRef.resetFields()
     },
     // 点击按钮，添加新用户
-    addUser() {
+    addUser () {
       // 添加用户之前预验证
       this.$refs.addFormRef.validate(async valid => {
         // console.log(valid)
@@ -392,11 +392,11 @@ export default {
         const { data: res } = await this.$http.post('users/add', this.addForm)
         // console.log(res)
         if (res.meta.status !== 200 && res.meta.status !== 401) {
-          return this.$message.error('failed adding user')
+          return this.$message.error('没能查到用户信息>_<!')
         } else if (res.meta.status === 401) {
-          return this.$message.error('already registered email')
+          return this.$message.error('已注册过的邮箱=_=')
         }
-        this.$message.success('added successful')
+        this.$message.success('成功添加新用户 ^_^!')
         // 添加成功后隐藏对话框
         this.addDialogVisible = false
         // 添加成功后，要刷新用户列表，重新请求最新数据
@@ -404,7 +404,7 @@ export default {
       })
     },
     // 点击按钮，修改用户
-    async showEditDialog(id) {
+    async showEditDialog (id) {
       this.findDialogVisible = false
       // console.log(id)
       const { data: res } = await this.$http.get('/users/' + id)
@@ -418,11 +418,11 @@ export default {
       this.editDialogVisible = true
     },
     // 监听 编辑用户对话框 的 关闭事件
-    editDialogClosed() {
+    editDialogClosed () {
       this.$refs.editFormRef.resetFields()
     },
     // 修改用户信息并提交
-    editUserInfo() {
+    editUserInfo () {
       this.$refs.editFormRef.validate(async valid => {
         // console.log(valid)
         if (!valid) return this.$message.error('用户信息编辑失败!!>_<')
@@ -442,15 +442,15 @@ export default {
       })
     },
     // 删除用户
-    async removeUserById(_id) {
+    async removeUserById (_id) {
       // console.log(_id)
       // 弹框提示
       const confirmResult = await this.$confirm(
         '确定要永久删除改用户信息嘛+_+?',
         '警告',
         {
-          confirmButtonText: 'yes',
-          cancelButtonText: 'no',
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No',
           type: 'warning'
         }
       ).catch(err => err)

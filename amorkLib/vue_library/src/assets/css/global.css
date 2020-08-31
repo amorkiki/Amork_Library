@@ -23,3 +23,47 @@ body,
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   margin-top: 15px;
 }
+.el-select {
+  width: 100px;
+}
+.el-steps {
+  margin: 15px 0;
+}
+.el-step__title {
+  font-size: 14px;
+  font-family: Marker Felt;
+  line-height: 38px;
+}
+.el-tabs__item {
+  font-size: 18px !important;
+  font-family: Marker Felt !important;
+}
+.tab-pane-form {
+  margin-left: 90px;
+  margin-top: 40px;
+  min-height: 300px;
+}
+.el-date-editor {
+  margin-top: 35px;
+  margin-bottom: 60px;
+}
+.behind-input {
+  padding-left: 25px;
+  font-size: 13px;
+  font-family: Comic Sans MS;
+  font-weight: 200;
+  color: #ccc;
+}
+
+#weather-v2-plugin-simple .s-sticker {
+  float: right;
+  width: 100px !important;
+  height: 100%;
+  margin-right: 55px;
+}
+#weather-v2-plugin-simple div:last-child {
+  display: none;
+}
+.ql-editor {
+  min-height: 400px;
+}

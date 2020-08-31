@@ -7,6 +7,13 @@ import '../src/assets/css/global.css'
 // 导入字体图标
 import './assets/font/iconfont.css'
 
+// 导入富文本编辑
+import VueQuillEditor from 'vue-quill-editor'
+
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
+
 // 引入axios包
 import axios from 'axios'
 
@@ -22,6 +29,8 @@ axios.interceptors.request.use(config => {
 
 // axios挂载到vue的原型对象上
 Vue.prototype.$http = axios
+// 富文本编辑引用
+Vue.use(VueQuillEditor /* { default global options } */)
 
 Vue.config.productionTip = false
 

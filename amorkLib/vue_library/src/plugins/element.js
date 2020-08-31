@@ -27,7 +27,15 @@ import {
   Progress,
   Cascader,
   Select,
-  Option
+  Option,
+  Alert,
+  Steps,
+  Step,
+  Tabs,
+  TabPane,
+  DatePicker,
+  Radio,
+  RadioGroup
 } from 'element-ui'
 
 Vue.use(Button)
@@ -57,5 +65,13 @@ Vue.use(Progress)
 Vue.use(Cascader)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Alert)
+Vue.use(Steps)
+Vue.use(Step)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(DatePicker)
+Vue.use(Radio)
+Vue.use(RadioGroup)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
