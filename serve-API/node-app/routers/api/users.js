@@ -60,14 +60,13 @@ router.post("/register", (req, res, next) => {
 // @desc  返回token jwt passport
 // @access public
 router.post("/login", (req, res) => {
-  const name = req.body.name;
+  const email = req.body.email;
   const password = req.body.password;
   // 查询数据库
-  User.findOne({ name }).then((user) => {
+  User.findOne({ email }).then((user) => {
     if (!user) {
       return res.json({ msg: "用户不存在", status: 400 });
     }
-
     // 密码匹配
     bcrypt.compare(password, user.password).then((isMatch) => {
       if (isMatch) {
