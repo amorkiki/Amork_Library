@@ -1,16 +1,15 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+// Create Schema
 const DiariesSchema = new Schema({
   user: {
-    type: Object,
-    required: true,
+    type: String,
   },
-  date: {
-    type: Date,
-    required: true,
+  dateAndTime: {
+    type: String,
   },
-  weather: {
+  radioWeather: {
     type: String,
   },
   b_name: {
@@ -31,4 +30,4 @@ const DiariesSchema = new Schema({
     required: true,
   },
 });
-module.export = Diaries = mongoose.model("diaries", DiariesSchema);
+module.exports = Diaries = mongoose.model("diaries", DiariesSchema);

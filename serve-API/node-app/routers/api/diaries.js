@@ -12,13 +12,43 @@ router.get("/test", (req, res) => {
 });
 
 // $route POST api/diaries/add
-// @desc  闯将日记
+// @desc  添加日记
 // @access private
-router.get(
+router.post(
   "/add",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const diariesFields = {};
+    const diariesFields = new Diaries();
+    if (req.body.dateAndTime) diariesFields.dateAndTime = req.body.dateAndTime;
+    if (req.body.radioWeather)
+      diariesFields.radioWeather = req.body.radioWeather;
+    if (req.body.b_name) diariesFields.b_name = req.body.b_name;
+    if (req.body.b_author) diariesFields.b_author = req.body.b_author;
+    if (req.body.b_chapters) diariesFields.b_chapters = req.body.b_chapters;
+    if (req.body.content) diariesFields.content = req.body.content;
+    diariesFields.save();
+    res.json({
+      data: diariesFields,
+      meta: { success: true, status: 200 },
+    });
+  }
+);
+
+// $route GET api/diaries/
+// @desc 获取所有日记
+// @access private
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Diaries.find()
+      .then((diaries) => {
+        if (!diaries) {
+          return res.json("没找到任何内容呀@_@");
+        }
+        res.json(JSON.parse(JSON.stringify(diaries)));
+      })
+      .catch((err) => res.json(err));
   }
 );
 
