@@ -41,7 +41,7 @@
         </el-col>
       </el-row>
       <!-- 图书列表区域 -->
-      <el-table :data="bookList" border style="width: 100%;">
+      <el-table :data="bookList" border style="width: 100%">
         <el-table-column type="index" width="30px"> </el-table-column>
         <el-table-column prop="type" label="Type" width="70px">
         </el-table-column>
@@ -268,7 +268,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       // 获取用户列表的参数对象
       queryInfo: {
@@ -418,12 +418,12 @@ export default {
       findDialogVisible: false
     }
   },
-  created () {
+  created() {
     this.getBookList()
   },
   methods: {
     // 获取图书列表
-    async getBookList () {
+    async getBookList() {
       const res = await this.$http.get('profiles', {
         params: this.queryInfo
       })
@@ -437,7 +437,7 @@ export default {
       // console.log(this.total)
     },
     // 查询图书列表
-    async findBookList (selected) {
+    async findBookList(selected) {
       // console.log(selected)
       if (!this.queryInfo.query) {
         return this.$message.error('请输入要查找的内容')
@@ -454,11 +454,11 @@ export default {
       this.findDialogVisible = true
     },
     // 表单关闭重置
-    addDialogClosed () {
+    addDialogClosed() {
       this.$refs.addBookFormRef.resetFields()
     },
     // ADD按钮点击添加book
-    addBook () {
+    addBook() {
       // 添加前预验证
       this.$refs.addBookFormRef.validate(async valid => {
         if (!valid) return this.$message.error('请输入正确的图书信息呦#_#')
@@ -489,7 +489,7 @@ export default {
     //   }
     // }
     // 点击修改按钮后弹出对话框
-    async showEditDialog (id) {
+    async showEditDialog(id) {
       this.findDialogVisible = false
       // console.log(id)
       const { data: res } = await this.$http.get('/profiles/' + id)
@@ -503,11 +503,11 @@ export default {
       this.editDialogVisible = true
     },
     // 修改对话框关闭后重置
-    editDialogClosed () {
+    editDialogClosed() {
       this.$refs.editBookFormRef.resetFields()
     },
     // 编辑图书
-    editBookInfo () {
+    editBookInfo() {
       this.$refs.editBookFormRef.validate(async valid => {
         if (!valid) return this.$message.error('请输入符合标准的信息')
         const { data: res } = await this.$http.put(
@@ -527,7 +527,7 @@ export default {
       })
     },
     // 删除图书
-    async removeBookById (id) {
+    async removeBookById(id) {
       // console.log(id)
       // 弹窗提示
       const confirmResult = await this.$confirm(
@@ -552,13 +552,13 @@ export default {
       }
     },
     // 监听 pagesize 改变 的事件
-    handleSizeChange (newsize) {
+    handleSizeChange(newsize) {
       console.log(newsize)
       this.queryInfo.pagesize = newsize
       this.getBookList()
     },
     // 监听 页码值 改变 的事件
-    handleCurrentChange (newpage) {
+    handleCurrentChange(newpage) {
       console.log(newpage)
       this.queryInfo.pagenum = newpage
       this.getBookList()
@@ -566,8 +566,4 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-.el-table {
-  font-size: 12px !important;
-}
-</style>
+<style lang="less" scoped></style>

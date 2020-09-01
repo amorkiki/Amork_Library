@@ -33,15 +33,21 @@
         <el-step title="finish" icon="iconfont icon-tradealert"></el-step>
       </el-steps>
       <!-- tab侧边栏区域 -->
-      <el-form label-width="100px" label-position="top">
+      <el-form
+        label-width="100px"
+        label-position="top"
+        :rules="addBookInfoRules"
+        class="tab-pane-form"
+      >
         <el-tabs
-          tab-position="right"
+          :tab-position="'right'"
           v-model="activeIndex"
           @tab-click="tabClick"
+          :before-leave="beforeTabLeave"
         >
           <!-- 第一个tab -->
           <el-tab-pane label="Date and Time" name="0">
-            <el-form class="tab-pane-form">
+            <el-form-item>
               <!-- 天气插件 -->
               <div id="weather-v2-plugin-simple"></div>
               <!-- 日期选择器 -->
@@ -51,13 +57,19 @@
                 placeholder="选择日期时间"
                 align="right"
                 :picker-options="datePickerOptions"
+                @change="chooseDate"
               >
               </el-date-picker>
               <span class="behind-input"
                 >Choose date and time for this log...</span
               >
+            </el-form-item>
+            <el-form-item>
               <!-- 天气单选框 -->
-              <el-radio-group v-model="notesInfo.radioWeather">
+              <el-radio-group
+                v-model="notesInfo.radioWeather"
+                @change="clickWeather"
+              >
                 <el-radio :label="1"
                   ><i class="iconfont icon-qingtian"></i
                 ></el-radio>
@@ -80,41 +92,55 @@
                 <el-radio :label="8"><i class="iconfont icon-wu"></i></el-radio>
               </el-radio-group>
               <span class="behind-input">Choose the weather here...</span>
+            </el-form-item>
+            <el-form-item>
               <el-button
                 type="primary"
                 class="bottom-btn"
                 @click="skipToNext(activeIndex)"
                 >Next ↘</el-button
               >
-            </el-form>
+            </el-form-item>
           </el-tab-pane>
           <!-- 第二个tab -->
           <el-tab-pane label="Add to which book?" name="1">
-            <el-form class="tab-pane-form" :rules="addBookInfoRules">
-              <!-- 图书信息表单 -->
-              <el-form-item label="About Book's Name" prop="b_name">
-                <el-input v-model="notesInfo.b_name"></el-input>
-              </el-form-item>
-              <el-form-item label="About Book's Author" prop="b_author">
-                <el-input v-model="notesInfo.b_author"></el-input>
-              </el-form-item>
-              <el-form-item label="About Chapters" prop="b_chapters">
-                <el-input v-model="notesInfo.b_chapters"></el-input>
-              </el-form-item>
-              <el-form-item label="Add remarks">
-                <el-input v-model="notesInfo.b_remarks"></el-input>
-              </el-form-item>
+            <!-- 图书信息表单 -->
+            <el-form-item
+              label="About Book's Name"
+              prop="b_name"
+              style="width:80%"
+            >
+              <el-input v-model="notesInfo.b_name"></el-input>
+            </el-form-item>
+            <el-form-item
+              label="About Book's Author"
+              prop="b_author"
+              style="width:80%"
+            >
+              <el-input v-model="notesInfo.b_author"></el-input>
+            </el-form-item>
+            <el-form-item
+              label="About Chapters"
+              prop="b_chapters"
+              style="width:80%"
+            >
+              <el-input v-model="notesInfo.b_chapters"></el-input>
+            </el-form-item>
+            <el-form-item label="Add remarks" style="width:80%">
+              <el-input v-model="notesInfo.b_remarks"></el-input>
+            </el-form-item>
+            <el-form-item>
               <el-button
                 type="primary"
                 class="bottom-btn"
                 @click="skipToNext(activeIndex)"
                 >Next ↘</el-button
               >
-            </el-form>
+            </el-form-item>
           </el-tab-pane>
           <!-- 第三个tab -->
           <el-tab-pane label="Reading Notes" name="2">
-            <el-form class="tab-pane-form">
+            <el-form-item style="width:95%">
               <quill-editor v-model="notesInfo.content" />
               <el-button
                 type="primary"
@@ -122,26 +148,21 @@
                 @click="skipToNext(activeIndex)"
                 >Next ↘</el-button
               >
-            </el-form>
+            </el-form-item>
           </el-tab-pane>
           <!-- 第四个tab -->
           <el-tab-pane label="Down" name="3">
-            <el-form class="tab-pane-form">
-              <el-row :gutter="20">
-                <el-col :span="7"><div>date</div></el-col>
-                <el-col :span="5"><div>weather</div></el-col>
-              </el-row>
-              <el-row :gutter="20">
-                <el-col :span="6"><div>book name</div></el-col>
-                <el-col :span="6"><div>author</div></el-col>
-                <el-col :span="6"><div>chapter</div></el-col>
-                <el-col :span="6"><div>remark</div></el-col>
-              </el-row>
-              <el-row :gutter="20">
-                <el-col :span="6"><div>book notes</div></el-col>
-              </el-row>
-              <el-button type="success" class="bottom-btn">Finish ↗</el-button>
-            </el-form>
+            <el-form-item>
+              <el-card>
+                <div>恭喜大人又完成一篇读书笔记啦~</div>
+                <div class="finish-img"></div>
+              </el-card>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="success" class="bottom-btn" @click="addNewNotes"
+                >Finish ↗</el-button
+              >
+            </el-form-item>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -149,14 +170,18 @@
   </div>
 </template>
 <script>
+// import _ from 'loadash'
+
 export default {
   data() {
     return {
+      // 图片地址
+      imgUrl: '../assets/15.jpeg',
       // 步骤条和tab的绑定
       activeIndex: '',
       notesInfo: {
-        // 时间选择器
-        dateAndTime: '',
+        // 转换后的时间
+        dateAndtime: '',
         // 天气单选框
         radioWeather: '',
         b_name: '',
@@ -193,6 +218,7 @@ export default {
           }
         ]
       }
+      // notesInfoArray: []
     }
   },
   methods: {
@@ -207,12 +233,60 @@ export default {
       } else if (this.activeIndex === '2') {
         this.activeIndex = '3'
         this.tabClick('3')
+        // this.notesArray()
       }
     },
     // tab栏点击事件
     tabClick(activeIndex) {
       console.log(activeIndex)
+    },
+    // 时间选择器
+    chooseDate(d) {
+      console.log(d)
+      const t = d.toString()
+      // console.log(typeof t)
+      this.notesInfo.dateAndtime = t.substring(0, 24)
+    },
+    // 天气单选框
+    clickWeather(w) {
+      // console.log(w)
+      this.notesInfo.radioWeather = w
+    },
+    // notesInfo转换为数组
+    // notesArray() {
+    //   const arr = Object.values(this.notesInfo)
+    //   // console.log(arr)
+    //   this.notesInfoArray = arr
+    //   console.log(this.notesInfoArray)
+    // },
+    async addNewNotes() {
+      const { data: res } = await this.$http.post(
+        '/diaries/add',
+        this.notesInfo
+      )
+      // console.log(res)
+      if (res.meta.status !== 200) {
+        return this.$message.error('提交失败啦>_<')
+      }
+      this.$message.success('提交成功啦^_^')
+      this.$router.go(-1)
     }
+    // tab切换验证
+    // beforeTabLeave(activeName, oldActiveName) {
+    //   if (!this.notesInfo.dateAndtime) {
+    //     this.$message.error('请添加日期和时间')
+    //     return false
+    //   } else if (this.notesInfo.b_name) {
+    //     this.$message.error('请添加阅读的书籍')
+    //     return false
+    //   } else if (this.notesInfo.b_author) {
+    //     this.$message.error('请添加该书的作者')
+    //     return false
+    //   } else if (this.notesInfo.content) {
+    //     this.$message.error('还没有任何笔记内容呀')
+    //     return false
+    //   }
+    // }
   },
   mounted() {
     window.WIDGET = {
@@ -259,18 +333,12 @@ export default {
 .el-radio-group {
   margin-bottom: 40px;
 }
-.el-row {
-  margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
+.el-tag {
+  margin: 0 10px;
 }
-.el-col div {
-  box-sizing: border-box;
-  background: #f4f4f5;
-  border-radius: 8px;
-  min-height: 40px;
-  line-height: 30px;
-  padding: 5px 10px;
+.finish-img {
+  height: 500px;
+  background: url('../assets/15.jpeg') no-repeat;
+  background-size: cover;
 }
 </style>

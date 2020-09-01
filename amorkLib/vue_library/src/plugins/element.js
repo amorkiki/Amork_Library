@@ -35,7 +35,9 @@ import {
   TabPane,
   DatePicker,
   Radio,
-  RadioGroup
+  RadioGroup,
+  Tag,
+  Image
 } from 'element-ui'
 
 Vue.use(Button)
@@ -73,5 +75,7 @@ Vue.use(TabPane)
 Vue.use(DatePicker)
 Vue.use(Radio)
 Vue.use(RadioGroup)
+Vue.use(Tag)
+Vue.use(Image)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

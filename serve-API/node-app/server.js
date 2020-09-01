@@ -14,6 +14,8 @@ const users = require("./routers/api/users");
 const profiles = require("./routers/api/profiles");
 //引入categories.js
 const categories = require("./routers/api/categories");
+//引入diaries.js
+const diaries = require("./routers/api/diaries");
 
 //DB config
 const db = require("./config/keys").mongoURI;
@@ -43,6 +45,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", users);
 app.use("/api/profiles", profiles);
 app.use("/api/categories", categories);
+app.use("/api/diaries", diaries);
 
 const port = process.env.PORT || 5000;
 

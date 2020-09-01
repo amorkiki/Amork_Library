@@ -32,6 +32,20 @@ Vue.prototype.$http = axios
 // 富文本编辑引用
 Vue.use(VueQuillEditor /* { default global options } */)
 
+// 创建过滤器将秒数过滤为年月日，时分秒
+Vue.filter('dateFormat', function(originVal) {
+  const dt = new Date(originVal)
+  const y = dt.getFullYear()
+  const m = (dt.getMonth() + 1 + '').padStart(2, '0')
+  const d = (dt.getDate() + '').padStart(2, '0')
+
+  const hh = (dt.getHours() + '').padStart(2, '0')
+  const mm = (dt.getMinutes() + '').padStart(2, '0')
+  const ss = (dt.getSeconds() + '').padStart(2, '0')
+
+  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+})
+
 Vue.config.productionTip = false
 
 new Vue({

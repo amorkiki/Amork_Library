@@ -18,7 +18,7 @@ router.post(
   "/add",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    //查询数据库中是否拥有改信息
+    //查询数据库中是否拥有该信息
     Profile.findOne({ b_name: req.body.b_name }).then((profile) => {
       if (profile) {
         return res.json({

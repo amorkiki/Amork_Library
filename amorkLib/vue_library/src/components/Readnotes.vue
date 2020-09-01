@@ -21,7 +21,7 @@
             clearable
             @clear="getNotesList()"
           >
-            <el-select v-model="selected" slot="prepend" placeholder="请选择">
+            <el-select slot="prepend" placeholder="请选择">
               <el-option label="书名" value="1"></el-option>
               <el-option label="用户" value="2"></el-option>
             </el-select>
@@ -39,8 +39,17 @@
         </el-col>
       </el-row>
       <!-- 图书列表区域 -->
-      <el-table>
-        123
+      <el-table :data="notesInfo" style="width: 100%" border>
+        <el-table-column type="index" width="30px"> </el-table-column>
+        <el-table-column
+          label="User"
+          prop="user"
+          width="90px"
+        ></el-table-column>
+        <el-table-column label="Date" prop="dateAndTime"></el-table-column>
+        <el-table-column label="Books" prop="b_name"></el-table-column>
+        <el-table-column label="Content" prop="content"></el-table-column>
+        <el-table-column label="Control"></el-table-column>
       </el-table>
     </el-card>
   </div>
@@ -48,14 +57,32 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      // 读书笔记信息
+      notesInfo: {
+        user: '',
+        // 时间选择器
+        dateAndTime: '',
+        // 天气单选框
+        radioWeather: '',
+        b_name: '',
+        content: ''
+      },
+      total: 0
+    }
   },
   created() {
     this.getNotesList()
   },
   methods: {
     // 获取笔记列表
-    getNotesList() {},
+    async getNotesList() {
+      const res = await this.$http.get('/diaries')
+      // console.log(res.data)
+      if (res.status !== 200) return this.$message.error('获取列表失败>_<')
+      this.notesInfo = res.data
+      this.total = res.data.length
+    },
     // 查询笔记
     findNotesList() {},
     // 点击添加跳转到添加页面
