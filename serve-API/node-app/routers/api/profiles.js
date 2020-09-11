@@ -27,33 +27,36 @@ router.post(
         });
       } else {
         const profileFields = new Profile();
-        // {
-        // b_name: req.body.b_name,
-        // author: req.body.author,
-        // isbn_num: req.body.isbn_num,
-        // type: req.body.type,
-        // publish: req.body.publish,
-        // status: req.body.status,
-        // remark: req.body.remark,
-        // }
+
         if (req.body.type)
           profileFields.type = req.body.type[req.body.type.length - 1];
         if (req.body.b_name) profileFields.b_name = req.body.b_name;
         if (req.body.author) profileFields.author = req.body.author;
         if (req.body.isbn_num) profileFields.isbn_num = req.body.isbn_num;
-        if (req.body.status) profileFields.status = req.body.status;
         if (req.body.remark) profileFields.remark = req.body.remark;
         if (req.body.publish) profileFields.publish = req.body.publish;
-        // if (!req.body.status) profileFields.status = 0;
-        profileFields.save();
-        res.json({
-          data: profileFields,
-          meta: {
-            success: true,
-            status: 200,
-          },
-        });
-        if (err) return res.json(err);
+        if (req.body.pages) profileFields.pages = req.body.pages;
+        if (!req.body.pages) profileFields.pages = 0;
+        if (req.body.current_p) profileFields.current_p = req.body.current_p;
+        if (!req.body.current_p || req.body.current_p === 0) {
+          profileFields.progress = 0;
+        } else {
+          profileFields.progress =
+            profileFields.current_p / profileFields.pages;
+        }
+        if (!req.body.progress) profileFields.progress = 0;
+        profileFields
+          .save()
+          .then((profileFields) => {
+            res.json({
+              data: profileFields,
+              meta: {
+                success: true,
+                status: 200,
+              },
+            });
+          })
+          .catch((err) => err);
       }
     });
   }
@@ -82,7 +85,12 @@ router.get(
         if (!profile) {
           return res.json("没找到任何内容呀@_@");
         }
-        res.json(JSON.parse(JSON.stringify(profile)));
+        const allProfiles = profile;
+        // res.json(JSON.parse(JSON.stringify(profile)));
+        res.json({
+          data: allProfiles,
+          meta: { success: true, status: 200 },
+        });
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -121,23 +129,32 @@ router.put(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const profileFields = {};
-
     if (req.body.type)
       profileFields.type = req.body.type[req.body.type.length - 1];
     if (req.body.b_name) profileFields.b_name = req.body.b_name;
     if (req.body.author) profileFields.author = req.body.author;
     if (req.body.isbn_num) profileFields.isbn_num = req.body.isbn_num;
-    if (req.body.status) profileFields.status = req.body.status;
     if (req.body.remark) profileFields.remark = req.body.remark;
     if (req.body.publish) profileFields.publish = req.body.publish;
+    if (req.body.pages) profileFields.pages = req.body.pages;
+    if (req.body.current_p) profileFields.current_p = req.body.current_p;
+    if (req.body.progress) profileFields.progress = req.body.progress;
+    if (!req.body.progress) profileFields.progress = 0;
 
-    // res.console.log(profileFields);
     Profile.findOneAndUpdate(
       { _id: req.params.id },
       { $set: profileFields },
       { returnOriginal: false }
     )
-      .then((profile) => res.json(profile))
+      .then((profileFields) => {
+        res.json({
+          data: profileFields,
+          meta: {
+            success: true,
+            status: 200,
+          },
+        });
+      })
       .catch((err) => err);
   }
 );

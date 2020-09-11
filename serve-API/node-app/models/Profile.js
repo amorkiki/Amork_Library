@@ -17,9 +17,6 @@ const ProfileSchema = new Schema({
   isbn_num: {
     type: String,
   },
-  status: {
-    type: Number,
-  },
   remark: {
     type: String,
   },
@@ -29,6 +26,15 @@ const ProfileSchema = new Schema({
   },
   publish: {
     type: String,
+  },
+  pages: {
+    type: Number,
+  },
+  current_p: {
+    type: Number,
+  },
+  progress: {
+    type: Number,
   },
 });
 
