@@ -5,9 +5,12 @@ import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
 import Users from '../components/Users.vue'
 import Booklist from '../components/Booklist.vue'
+import Category from '../components/Category.vue'
 import Readnotes from '../components/Readnotes.vue'
 import Addnotes from '../components/Addnotes.vue'
 import Readtrack from '../components/Readtrack.vue'
+import History from '../components/History.vue'
+import Pie from '../components/Pie.vue'
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -22,9 +25,12 @@ const router = new VueRouter({
         { path: '/welcome', component: Welcome },
         { path: '/users', component: Users },
         { path: '/booklist', component: Booklist },
+        { path: '/category', component: Category },
         { path: '/readingnotes', component: Readnotes },
         { path: '/readingnotes/add', component: Addnotes },
-        { path: '/readingtracks', component: Readtrack }
+        { path: '/readingtracks', component: Readtrack },
+        { path: '/history', component: History },
+        { path: '/pie', component: Pie }
       ]
     }
   ]

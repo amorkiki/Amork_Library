@@ -37,7 +37,10 @@ import {
   Radio,
   RadioGroup,
   Tag,
-  Image
+  Image,
+  InputNumber,
+  Timeline,
+  TimelineItem
 } from 'element-ui'
 
 Vue.use(Button)
@@ -77,5 +80,8 @@ Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(Tag)
 Vue.use(Image)
+Vue.use(InputNumber)
+Vue.use(Timeline)
+Vue.use(TimelineItem)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

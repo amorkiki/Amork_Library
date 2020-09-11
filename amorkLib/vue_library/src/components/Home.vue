@@ -2,7 +2,7 @@
   <el-container class="home_container">
     <!-- 头部区域 -->
     <el-header class="">
-      <span>Welcome to your reading tracking system ^_^</span>
+      <span>Welcome to reading track system ^_^</span>
       <el-button type="info" @click="logout"> Esc</el-button>
     </el-header>
     <!-- 页面主体区域 -->
@@ -25,11 +25,7 @@
           :default-active="activePath"
         >
           <!-- 一级菜单 -->
-          <el-submenu
-            :index="item.id + ''"
-            :key="item.id"
-            v-for="item in menulist"
-          >
+          <el-submenu :index="item.id + ''" :key="item.id" v-for="item in menulist">
             <!-- 一级菜单模板 -->
             <template slot="title">
               <!-- 图标 -->
@@ -118,19 +114,33 @@ export default {
         {
           id: 4,
           m_name: 'datas',
-          path: null
+          path: null,
+          children: [
+            {
+              id: 41,
+              sbm_name: 'history line',
+              path: 'history'
+            },
+            {
+              id: 42,
+              sbm_name: 'category pie ',
+              path: 'pie'
+            }
+          ]
         }
       ],
       iconsObj: {
         1: 'iconfont icon-Customermanagement',
         2: 'iconfont icon-Moneymanagement',
         3: 'iconfont icon-agriculture',
-        4: 'iconfont icon-data',
+        4: 'iconfont icon-data-view',
         11: 'iconfont icon-usercenter',
         21: 'iconfont icon-category',
-        22: 'iconfont icon-libra',
-        31: 'iconfont icon-tradingvolume',
-        32: 'iconfont icon-attachent'
+        22: 'iconfont icon-column',
+        31: 'iconfont icon-operation',
+        32: 'iconfont icon-tradealert',
+        41: 'iconfont icon-tradingvolume',
+        42: 'iconfont icon-data'
       },
       isCollapse: false,
       // 保存的激活链接地址
