@@ -1,13 +1,8 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb
-      separator-class="el-icon-arrow-right"
-      active-text-color="#a38eaa"
-    >
-      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa"
-        >home</el-breadcrumb-item
-      >
+    <el-breadcrumb separator-class="el-icon-arrow-right" active-text-color="#a38eaa">
+      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa">home</el-breadcrumb-item>
       <el-breadcrumb-item>users</el-breadcrumb-item>
       <el-breadcrumb-item>userlist</el-breadcrumb-item>
     </el-breadcrumb>
@@ -16,28 +11,17 @@
       <!-- 搜索&添加区域 -->
       <el-row :gutter="25">
         <el-col :span="12">
-          <el-input
-            placeholder="searching box..."
-            v-model="queryInfo.query"
-            clearable
-            @clear="getUserList"
-          >
-            <el-select v-model="selected" slot="prepend" placeholder="请选择">
+          <el-input placeholder="请先勾选查找方式..." v-model="queryInfo.query" clearable @clear="getUserList">
+            <el-select v-model="selected" slot="prepend" placeholder="查找方式">
               <el-option label="姓名" value="1"></el-option>
               <el-option label="邮箱" value="2"></el-option>
               <el-option label="身份" value="3"></el-option>
             </el-select>
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="findUserList(selected)"
-            ></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="findUserList(selected)"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="info" @click="addDialogVisible = true"
-            >ADD</el-button
-          >
+          <el-button type="info" @click="addDialogVisible = true">ADD</el-button>
         </el-col>
       </el-row>
       <!-- 用户列表区域 -->
@@ -49,51 +33,22 @@
         <!-- 状态栏 -->
         <el-table-column label="STATUS">
           <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.situation"
-              @change="changeSwitch(scope.row)"
-            ></el-switch>
+            <el-switch v-model="scope.row.situation" @change="changeSwitch(scope.row)"></el-switch>
           </template>
         </el-table-column>
         <!-- 操作栏 -->
         <el-table-column label="CONTROL">
           <template slot-scope="scope">
-            <el-tooltip
-              effect="light"
-              content="edit"
-              place
-              ment="top"
-              :enterable="false"
-            >
-              <el-button
-                type="info"
-                icon="iconfont icon-editor"
-                size="mini"
-                @click="showEditDialog(scope.row._id)"
-              ></el-button>
+            <el-tooltip effect="dark" content="edit" placement="top" :enterable="false">
+              <el-button type="text" @click="showEditDialog(scope.row._id)">
+                <i class="iconfont icon-editor" style="color: #91ca8d"></i>
+              </el-button>
             </el-tooltip>
-            <el-tooltip
-              effect="dark"
-              content="delete"
-              placement="top"
-              :enterable="false"
-              ><el-button
-                type="danger"
-                icon="iconfont icon-ashbin"
-                size="mini"
-                @click="removeUserById(scope.row._id)"
-              ></el-button
+            <el-tooltip effect="dark" content="delete" placement="top" :enterable="false">
+              <el-button type="text" @click="removeUserById(scope.row._id)"> <i class="iconfont icon-ashbin" style="color: #ea7e53"></i> </el-button
             ></el-tooltip>
-            <el-tooltip
-              effect="light"
-              content="skip to booklist"
-              placement="top"
-              :enterable="false"
-              ><el-button
-                type="warning"
-                icon="iconfont icon-Moneymanagement"
-                size="mini"
-              ></el-button
+            <el-tooltip effect="dark" content="skip to booklist" placement="top" :enterable="false"
+              ><el-button type="text"> <i class="iconfont icon-Moneymanagement" style="color: #7288ac"></i> </el-button
             ></el-tooltip>
           </template>
         </el-table-column>
@@ -111,12 +66,7 @@
       </el-pagination> -->
     </el-card>
     <!-- 添加区域弹出的对话框 -->
-    <el-dialog
-      title="Add new user"
-      :visible.sync="addDialogVisible"
-      width="50%"
-      @close="addDialogClosed"
-    >
+    <el-dialog title="Add new user" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef">
         <el-form-item label="Your name" prop="name" required>
           <el-input v-model="addForm.name"></el-input>
@@ -133,21 +83,12 @@
       </el-form>
       <!-- 添加框の底部按钮区域 -->
       <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="addDialogVisible = false">
-          no
-        </el-button>
-        <el-button type="warning" @click="addUser">
-          yes
-        </el-button>
+        <el-button type="info" @click="addDialogVisible = false"> no </el-button>
+        <el-button type="warning" @click="addUser"> yes </el-button>
       </div>
     </el-dialog>
     <!-- 修改用户信息弹出的对话框 -->
-    <el-dialog
-      title="Edit info"
-      :visible.sync="editDialogVisible"
-      width="50%"
-      @close="editDialogClosed"
-    >
+    <el-dialog title="Edit info" :visible.sync="editDialogVisible" width="50%" @close="editDialogClosed">
       <el-form :model="editForm" :rules="editFormRules" ref="editFormRef">
         <el-form-item label="Email">
           <el-input v-model="editForm.email" disabled></el-input>
@@ -161,16 +102,10 @@
       </el-form>
       <span slot="footer" class="dialog-footer"></span>
       <el-button type="info" @click="editDialogVisible = false"> no </el-button>
-      <el-button type="warning" @click="editUserInfo()">
-        yes
-      </el-button>
+      <el-button type="warning" @click="editUserInfo()"> yes </el-button>
     </el-dialog>
     <!-- 查询图书信息弹出的对话框 -->
-    <el-dialog
-      title="Find Users +_+!"
-      :visible.sync="findDialogVisible"
-      width="90%"
-    >
+    <el-dialog title="Find Users +_+!" :visible.sync="findDialogVisible" width="90%">
       <el-table :data="findUser">
         <el-table-column type="index"> </el-table-column>
         <el-table-column prop="name" label="NAME"> </el-table-column>
@@ -179,51 +114,20 @@
         <!-- 状态栏 -->
         <el-table-column label="STATUS">
           <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.situation"
-              @change="changeSwitch(scope.row)"
-            ></el-switch>
+            <el-switch v-model="scope.row.situation" @change="changeSwitch(scope.row)"></el-switch>
           </template>
         </el-table-column>
         <!-- 操作栏 -->
         <el-table-column label="CONTROL">
           <template slot-scope="scope">
-            <el-tooltip
-              effect="light"
-              content="edit"
-              place
-              ment="top"
-              :enterable="false"
-            >
-              <el-button
-                type="info"
-                icon="iconfont icon-editor"
-                size="mini"
-                @click="showEditDialog(scope.row._id)"
-              ></el-button>
+            <el-tooltip effect="light" content="edit" place ment="top" :enterable="false">
+              <el-button type="info" icon="iconfont icon-editor" size="mini" @click="showEditDialog(scope.row._id)"></el-button>
             </el-tooltip>
-            <el-tooltip
-              effect="dark"
-              content="delete"
-              placement="top"
-              :enterable="false"
-              ><el-button
-                type="danger"
-                icon="iconfont icon-ashbin"
-                size="mini"
-                @click="removeUserById(scope.row._id)"
-              ></el-button
+            <el-tooltip effect="dark" content="delete" placement="top" :enterable="false"
+              ><el-button type="danger" icon="iconfont icon-ashbin" size="mini" @click="removeUserById(scope.row._id)"></el-button
             ></el-tooltip>
-            <el-tooltip
-              effect="light"
-              content="skip to booklist"
-              placement="top"
-              :enterable="false"
-              ><el-button
-                type="warning"
-                icon="iconfont icon-Moneymanagement"
-                size="mini"
-              ></el-button
+            <el-tooltip effect="light" content="skip to booklist" placement="top" :enterable="false"
+              ><el-button type="warning" icon="iconfont icon-Moneymanagement" size="mini"></el-button
             ></el-tooltip>
           </template>
         </el-table-column>
@@ -472,6 +376,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .el-select {
-  width: 100px;
+  width: 110px;
 }
 </style>

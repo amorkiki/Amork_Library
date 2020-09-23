@@ -22,7 +22,10 @@ body,
 .el-table {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   margin-top: 15px;
-  font-size: 12px !important;
+  font-size: 14px !important;
+}
+.el-table .cell {
+  text-align: center;
 }
 .el-select {
   width: 100px;
