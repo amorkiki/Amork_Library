@@ -36,13 +36,13 @@
         <!-- 明细栏 -->
         <el-table-column label="Show Details" width="220px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="update current pages" placement="top" :enterable="false">
+            <el-tooltip effect="light" content="update current prgress" placement="top" :enterable="false">
               <el-button type="text" @click="changeCur(scope.row._id)"><i class="iconfont icon-exchangerate" style="color: #91ca8d; font-size: 25px"></i> </el-button>
             </el-tooltip>
-            <el-tooltip effect="light" content="show reading progress" placement="top" :enterable="false">
+            <el-tooltip effect="light" content="show progress" placement="top" :enterable="false">
               <el-button type="text" @click="showRead"><i class="iconfont icon-pin" style="color: #7288ac"></i></el-button>
             </el-tooltip>
-            <el-tooltip effect="light" content="show writing progress" placement="top" :enterable="false">
+            <el-tooltip effect="light" content="show logs" placement="top" :enterable="false">
               <el-button type="text"><i class="iconfont icon-writing" style="color: #ea7e53"></i></el-button>
             </el-tooltip>
           </template>
@@ -50,7 +50,7 @@
       </el-table>
     </el-card>
     <!-- 更改当前页弹出框 -->
-    <el-dialog title="Change current pages to..." :visible.sync="pageDialogVisible" width="500px">
+    <el-dialog title="请输入已阅读完毕的页数..." :visible.sync="pageDialogVisible" width="500px">
       <el-input prefix-icon="el-icon-s-operation" style="font-size: 18px" v-model="current_p" ref="saveInputRef" @keyup.enter.native="handleInputConfirm">
         <el-button slot="append" icon="el-icon-check" width="50px" @click="handleInputConfirm"></el-button>
       </el-input>
@@ -73,7 +73,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       bookList: [],
       // 点击修改页数是拿到的书的pages
@@ -92,12 +92,12 @@ export default {
       readingSteps: [{ progress: '', timestamp: '' }]
     }
   },
-  created () {
+  created() {
     this.getBookList()
   },
   methods: {
     // 获取图书列表
-    async getBookList () {
+    async getBookList() {
       const { data: res } = await this.$http.get('profiles', {
         params: this.queryInfo
       })
@@ -112,7 +112,7 @@ export default {
       // console.log(this.newArr[3])
     },
     // 进度条颜色变化
-    customColorMethod (percentage) {
+    customColorMethod(percentage) {
       if (percentage < 20) {
         return '#f56c6c'
       } else if (percentage < 50) {
@@ -124,7 +124,7 @@ export default {
       }
     },
     // 点击确定更改阅读进度按钮
-    async handleInputConfirm (id) {
+    async handleInputConfirm(id) {
       this.pageDialogVisible = false
       // console.log(this.current_p)
       // console.log(this.current_pages)
@@ -153,7 +153,7 @@ export default {
       this.getBookList()
     },
     // 更改当前页弹出框
-    async changeCur (id) {
+    async changeCur(id) {
       // console.log(id)
       // 拿到id后发送请求，拿到当前id的current_p的值
       const { data: res } = await this.$http.get('/profiles/' + id)
@@ -169,12 +169,10 @@ export default {
     },
 
     // 显示阅读进度按钮
-    showRead () {
+    showRead() {
       this.readDialogVisible = true
     }
-
   }
 }
 </script>
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

@@ -51,5 +51,26 @@ router.get(
       .catch((err) => res.json(err));
   }
 );
+//$route PUSH api/diaries/edit/:id
+// router.push("/edit/:id", passport.authenticate("jwt", { session: false }), {
+//   (req, res)=> {
+//     Diaries.findOne()
+//   }
+// });
+
+//$route Delete api/diaries/edit/:id
+// @desc  删除信息接口
+// @access private
+router.delete(
+  "/delete/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Diaries.findOneAndRemove({ _id: req.params.id })
+      .then((diaries) => {
+        diaries.save().then((diaries) => res.json(diaries));
+      })
+      .catch((err) => res.json(err));
+  }
+);
 
 module.exports = router;

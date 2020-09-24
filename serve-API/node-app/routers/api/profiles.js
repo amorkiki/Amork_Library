@@ -159,7 +159,7 @@ router.put(
   }
 );
 
-// $route POST api/profiles/delete/:id
+// $route delete api/profiles/delete/:id
 // @desc  删除信息接口
 // @access private
 router.delete(

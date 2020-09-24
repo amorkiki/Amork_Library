@@ -1,8 +1,13 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right" active-text-color="#a38eaa">
-      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa">home</el-breadcrumb-item>
+    <el-breadcrumb
+      separator-class="el-icon-arrow-right"
+      active-text-color="#a38eaa"
+    >
+      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa"
+        >home</el-breadcrumb-item
+      >
       <el-breadcrumb-item>users</el-breadcrumb-item>
       <el-breadcrumb-item>userlist</el-breadcrumb-item>
     </el-breadcrumb>
@@ -11,17 +16,28 @@
       <!-- 搜索&添加区域 -->
       <el-row :gutter="25">
         <el-col :span="12">
-          <el-input placeholder="请先勾选查找方式..." v-model="queryInfo.query" clearable @clear="getUserList">
+          <el-input
+            placeholder="请先勾选查找方式..."
+            v-model="queryInfo.query"
+            clearable
+            @clear="getUserList"
+          >
             <el-select v-model="selected" slot="prepend" placeholder="查找方式">
               <el-option label="姓名" value="1"></el-option>
               <el-option label="邮箱" value="2"></el-option>
               <el-option label="身份" value="3"></el-option>
             </el-select>
-            <el-button slot="append" icon="el-icon-search" @click="findUserList(selected)"></el-button>
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="findUserList(selected)"
+            ></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="info" @click="addDialogVisible = true">ADD</el-button>
+          <el-button type="info" @click="addDialogVisible = true"
+            >ADD</el-button
+          >
         </el-col>
       </el-row>
       <!-- 用户列表区域 -->
@@ -33,22 +49,47 @@
         <!-- 状态栏 -->
         <el-table-column label="STATUS">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.situation" @change="changeSwitch(scope.row)"></el-switch>
+            <el-switch
+              v-model="scope.row.situation"
+              @change="changeSwitch(scope.row)"
+            ></el-switch>
           </template>
         </el-table-column>
         <!-- 操作栏 -->
         <el-table-column label="CONTROL">
           <template slot-scope="scope">
-            <el-tooltip effect="dark" content="edit" placement="top" :enterable="false">
+            <el-tooltip
+              effect="dark"
+              content="edit"
+              placement="top"
+              :enterable="false"
+            >
               <el-button type="text" @click="showEditDialog(scope.row._id)">
                 <i class="iconfont icon-editor" style="color: #91ca8d"></i>
               </el-button>
             </el-tooltip>
-            <el-tooltip effect="dark" content="delete" placement="top" :enterable="false">
-              <el-button type="text" @click="removeUserById(scope.row._id)"> <i class="iconfont icon-ashbin" style="color: #ea7e53"></i> </el-button
+            <el-tooltip
+              effect="dark"
+              content="delete"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button type="text" @click="removeUserById(scope.row._id)">
+                <i
+                  class="iconfont icon-ashbin"
+                  style="color: #ea7e53"
+                ></i> </el-button
             ></el-tooltip>
-            <el-tooltip effect="dark" content="skip to booklist" placement="top" :enterable="false"
-              ><el-button type="text"> <i class="iconfont icon-Moneymanagement" style="color: #7288ac"></i> </el-button
+            <el-tooltip
+              effect="dark"
+              content="skip to booklist"
+              placement="top"
+              :enterable="false"
+              ><el-button type="text">
+                <i
+                  class="iconfont icon-Moneymanagement"
+                  style="color: #7288ac"
+                ></i> </el-button
             ></el-tooltip>
           </template>
         </el-table-column>
@@ -66,7 +107,12 @@
       </el-pagination> -->
     </el-card>
     <!-- 添加区域弹出的对话框 -->
-    <el-dialog title="Add new user" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
+    <el-dialog
+      title="Add new user"
+      :visible.sync="addDialogVisible"
+      width="50%"
+      @close="addDialogClosed"
+    >
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef">
         <el-form-item label="Your name" prop="name" required>
           <el-input v-model="addForm.name"></el-input>
@@ -83,12 +129,19 @@
       </el-form>
       <!-- 添加框の底部按钮区域 -->
       <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="addDialogVisible = false"> no </el-button>
+        <el-button type="info" @click="addDialogVisible = false">
+          no
+        </el-button>
         <el-button type="warning" @click="addUser"> yes </el-button>
       </div>
     </el-dialog>
     <!-- 修改用户信息弹出的对话框 -->
-    <el-dialog title="Edit info" :visible.sync="editDialogVisible" width="50%" @close="editDialogClosed">
+    <el-dialog
+      title="Edit info"
+      :visible.sync="editDialogVisible"
+      width="50%"
+      @close="editDialogClosed"
+    >
       <el-form :model="editForm" :rules="editFormRules" ref="editFormRef">
         <el-form-item label="Email">
           <el-input v-model="editForm.email" disabled></el-input>
@@ -104,8 +157,12 @@
       <el-button type="info" @click="editDialogVisible = false"> no </el-button>
       <el-button type="warning" @click="editUserInfo()"> yes </el-button>
     </el-dialog>
-    <!-- 查询图书信息弹出的对话框 -->
-    <el-dialog title="Find Users +_+!" :visible.sync="findDialogVisible" width="90%">
+    <!-- 查询信息弹出的对话框 -->
+    <el-dialog
+      title="Find Users +_+!"
+      :visible.sync="findDialogVisible"
+      width="90%"
+    >
       <el-table :data="findUser">
         <el-table-column type="index"> </el-table-column>
         <el-table-column prop="name" label="NAME"> </el-table-column>
@@ -114,20 +171,47 @@
         <!-- 状态栏 -->
         <el-table-column label="STATUS">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.situation" @change="changeSwitch(scope.row)"></el-switch>
+            <el-switch
+              v-model="scope.row.situation"
+              @change="changeSwitch(scope.row)"
+            ></el-switch>
           </template>
         </el-table-column>
         <!-- 操作栏 -->
         <el-table-column label="CONTROL">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="edit" place ment="top" :enterable="false">
-              <el-button type="info" icon="iconfont icon-editor" size="mini" @click="showEditDialog(scope.row._id)"></el-button>
+            <el-tooltip
+              effect="dark"
+              content="edit"
+              place
+              ment="top"
+              :enterable="false"
+            >
+              <el-button type="text" @click="showEditDialog(scope.row._id)">
+                <i class="iconfont icon-editor" style="color: #91ca8d"></i
+              ></el-button>
             </el-tooltip>
-            <el-tooltip effect="dark" content="delete" placement="top" :enterable="false"
-              ><el-button type="danger" icon="iconfont icon-ashbin" size="mini" @click="removeUserById(scope.row._id)"></el-button
+            <el-tooltip
+              effect="dark"
+              content="delete"
+              placement="top"
+              :enterable="false"
+              ><el-button type="text" @click="removeUserById(scope.row._id)"
+                ><i
+                  class="iconfont icon-ashbin"
+                  style="color: #ea7e53"
+                ></i></el-button
             ></el-tooltip>
-            <el-tooltip effect="light" content="skip to booklist" placement="top" :enterable="false"
-              ><el-button type="warning" icon="iconfont icon-Moneymanagement" size="mini"></el-button
+            <el-tooltip
+              effect="light"
+              content="skip to booklist"
+              placement="top"
+              :enterable="false"
+              ><el-button type="text">
+                <i
+                  class="iconfont icon-Moneymanagement"
+                  style="color: #7288ac"
+                ></i> </el-button
             ></el-tooltip>
           </template>
         </el-table-column>
@@ -137,7 +221,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     // 验证邮箱的规则
     var checkEmail = (rule, value, callback) => {
       const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
@@ -228,12 +312,12 @@ export default {
       findDialogVisible: false
     }
   },
-  created () {
+  created() {
     this.getUserList()
   },
   methods: {
     // 获取用户列表
-    async getUserList () {
+    async getUserList() {
       const { data: res } = await this.$http.get('users/list')
       // console.log(res)
       if (!res) return this.$message.error('没拿到任何信息呀 >_<')
@@ -243,7 +327,7 @@ export default {
       // console.log(this.total)
     },
     // 查询用户列表
-    async findUserList (selected) {
+    async findUserList(selected) {
       if (!this.queryInfo.query) {
         return this.$message.error('请输入要查找的内容')
       }
@@ -259,7 +343,7 @@ export default {
       this.findDialogVisible = true
     },
     // 表格状态颜色
-    tableRowClassName ({ row, rowIndex }) {
+    tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 0) {
         return 'success-row'
       } else if (rowIndex === 4) {
@@ -268,7 +352,7 @@ export default {
       return ''
     },
     // 切换situation状态栏
-    async changeSwitch (switchInfo) {
+    async changeSwitch(switchInfo) {
       console.log(switchInfo)
       const { data: res } = await this.$http.put(
         `users/${switchInfo._id}/situation/${switchInfo.situation}`
@@ -281,11 +365,11 @@ export default {
       this.$message.success('状态更新成功 *_*')
     },
     // 监听添加对话框的关闭, 关闭后重置表单
-    addDialogClosed () {
+    addDialogClosed() {
       this.$refs.addFormRef.resetFields()
     },
     // 点击按钮，添加新用户
-    addUser () {
+    addUser() {
       // 添加用户之前预验证
       this.$refs.addFormRef.validate(async valid => {
         // console.log(valid)
@@ -308,7 +392,7 @@ export default {
       })
     },
     // 点击按钮，修改用户
-    async showEditDialog (id) {
+    async showEditDialog(id) {
       this.findDialogVisible = false
       // console.log(id)
       const { data: res } = await this.$http.get('/users/' + id)
@@ -322,11 +406,11 @@ export default {
       this.editDialogVisible = true
     },
     // 监听 编辑用户对话框 的 关闭事件
-    editDialogClosed () {
+    editDialogClosed() {
       this.$refs.editFormRef.resetFields()
     },
     // 修改用户信息并提交
-    editUserInfo () {
+    editUserInfo() {
       this.$refs.editFormRef.validate(async valid => {
         // console.log(valid)
         if (!valid) return this.$message.error('用户信息编辑失败!!>_<')
@@ -346,7 +430,7 @@ export default {
       })
     },
     // 删除用户
-    async removeUserById (_id) {
+    async removeUserById(_id) {
       // console.log(_id)
       // 弹框提示
       const confirmResult = await this.$confirm(

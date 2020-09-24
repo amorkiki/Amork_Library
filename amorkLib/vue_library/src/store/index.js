@@ -103,7 +103,11 @@ export default new Vuex.Store({
       { value: '外文', label: '外文' }
     ]
   },
-  mutations: {},
-  actions: {},
+  mutations: {
+    setCategories(state) {}
+  },
+  actions: {
+    getCategories() {}
+  },
   getters: {}
 })
