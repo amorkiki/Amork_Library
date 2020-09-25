@@ -7,18 +7,19 @@ const Diaries = require("../../models/Diaries");
 // $route GET api/diaries/test
 // @desc  返回请求的json数据
 // @access public
-router.get("/test", (req, res) => {
-  res.json({ msg: "profile works" });
-});
+// router.get("/test", (req, res) => {
+//   res.json({ msg: "profile works" });
+// });
 
 // $route POST api/diaries/add
 // @desc  添加日记
 // @access private
 router.post(
-  "/add",
+  "/add/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const diariesFields = new Diaries();
+    diariesFields.creator_id = req.params.id;
     if (req.body.dateAndTime) diariesFields.dateAndTime = req.body.dateAndTime;
     if (req.body.radioWeather)
       diariesFields.radioWeather = req.body.radioWeather;
@@ -38,17 +39,29 @@ router.post(
 // @desc 获取所有日记
 // @access private
 router.get(
-  "/",
+  "/:role/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Diaries.find()
-      .then((diaries) => {
-        if (!diaries) {
-          return res.json("没找到任何内容呀@_@");
-        }
-        res.json(JSON.parse(JSON.stringify(diaries)));
-      })
-      .catch((err) => res.json(err));
+    if (req.params.role === "common") {
+      Diaries.find({ creator_id: req.params.id })
+        .then((diaries) => {
+          if (!diaries) {
+            return res.json("没找到任何内容呀@_@");
+          }
+          res.json(JSON.parse(JSON.stringify(diaries)));
+        })
+        .catch((err) => res.json(err));
+    }
+    if (req.params.role === "manager") {
+      Diaries.find()
+        .then((diaries) => {
+          if (!diaries) {
+            return res.json("没找到任何内容呀@_@");
+          }
+          res.json(JSON.parse(JSON.stringify(diaries)));
+        })
+        .catch((err) => res.json(err));
+    }
   }
 );
 //$route PUSH api/diaries/edit/:id

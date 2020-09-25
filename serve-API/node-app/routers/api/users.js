@@ -40,9 +40,10 @@ router.post("/register", (req, res, next) => {
         password: req.body.password,
         identity: req.body.identity,
         situation: req.body.situation,
+        role: req.body.role,
       });
       // 给密码加密
-      bcrypt.hash(newUser.password, 10, function(err, hash) {
+      bcrypt.hash(newUser.password, 10, function (err, hash) {
         if (err) {
           return err;
         }
@@ -70,25 +71,59 @@ router.post("/login", (req, res) => {
     // 密码匹配
     bcrypt.compare(password, user.password).then((isMatch) => {
       if (isMatch) {
-        const rule = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          avatar: user.avatar,
-          identity: user.identity,
-          situation: user.situation,
-        };
-        jwt.sign(rule, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
-          if (err) throw err;
-          res.json({
-            data: rule,
-            meta: {
-              success: true,
-              status: 200,
-              token: "Bearer " + token,
-            },
-          });
-        });
+        if (email == "admin@123.com") {
+          const rule = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar,
+            identity: user.identity,
+            situation: user.situation,
+            role: "manager",
+          };
+          jwt.sign(
+            rule,
+            keys.secretOrKey,
+            { expiresIn: 3600 },
+            (err, token) => {
+              if (err) throw err;
+              res.json({
+                data: rule,
+                meta: {
+                  success: true,
+                  status: 200,
+                  token: "Bearer " + token,
+                },
+              });
+            }
+          );
+        } else {
+          const rule = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar,
+            identity: user.identity,
+            situation: user.situation,
+            role: user.role,
+          };
+          jwt.sign(
+            rule,
+            keys.secretOrKey,
+            { expiresIn: 3600 },
+            (err, token) => {
+              if (err) throw err;
+              res.json({
+                data: rule,
+                meta: {
+                  success: true,
+                  status: 200,
+                  token: "Bearer " + token,
+                },
+              });
+            }
+          );
+        }
       } else {
         return res.json({ msg: "密码错误", status: 400 });
       }
@@ -109,67 +144,61 @@ router.get(
       email: req.user.email,
       identity: req.user.identity,
       situation: user.situation,
+      role: user.role,
     });
   }
 );
+
 // $route GET api/users/list
-// @desc  获取用户信息接口
+// @desc  获取用户列表接口
 // @access private
 router.get(
-  "/list",
+  "/list/:role/:id",
   passport.authenticate("jwt", { session: false }),
-  // (req, res, nex) => {
-  // 验证参数
-  //   if (!req.query.pagenum || req.query.pagenum <= 0) {
-  //     return res.json({ meta: { msg: "pagenum出错啦" } });
-  //   }
-  //   if (!req.query.pagesize || req.query.pagesize <= 0) {
-  //     return res.json({ meta: { msg: "pagesize出错啦" } });
-  //   }
-  // },
-  (req, res) => {
-    User.find({
-      query: req.query.query,
-      pagenum: req.query.pagenum,
-      pagesize: req.query.pagesize,
-    })
-      .then((user) => {
-        if (!user) {
-          return res.json({ msg: "没找到任何内容呀@_@", status: 400 });
-        }
-        res.json(JSON.parse(JSON.stringify(user)));
-        // res.json(user);
-      })
-      .catch((err) => res.log(err));
-  }
-);
 
-// $route PUT api/users/:uId/situation/:type
-// @desc 修改用户状态
-// @access private
-router.put(
-  "/:id/situation/:situation",
-  passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    //请求头拿到的situation信息
-    //const result = req.params.situation;
-    //res.json(result);
-    const userSitu = {};
-    if (req.params.situation) {
-      //bug修复：直接用req.params.situation 赋值给userSitu.situation不起作用，
-      //因为situation定义的是boolean不是string
-      //用JSON.parse转换一下，使得格式变成any
-      userSitu.situation = JSON.parse(req.params.situation);
-      User.findOneAndUpdate(
-        { _id: req.params.id },
-        { $set: userSitu },
-        { returnOriginal: false }
-      )
-        .then((user) => res.json(user))
+    if (req.params.role === "common") {
+      User.find({ _id: req.params.id })
+        .then((user) => {
+          if (!user) {
+            return res.json("没找到这条内容呀@_@");
+          }
+          const data = user;
+          res.json({
+            data,
+            meta: {
+              status: 200,
+              success: true,
+            },
+          });
+        })
+        .catch((err) => res.json(err));
+    }
+    if (req.params.role === "manager") {
+      User.find()
+        .then((user) => {
+          if (!user) {
+            return res.json("没找到这条内容呀@_@");
+          }
+          const data = user;
+          res.json({
+            data,
+            meta: {
+              status: 200,
+              success: true,
+            },
+          });
+          // if (!user) {
+          //   return res.json({ msg: "没找到任何内容呀@_@", status: 400 });
+          // }
+          // res.json(JSON.parse(JSON.stringify(user)));
+          // // res.json(user);
+        })
         .catch((err) => res.json(err));
     }
   }
 );
+
 // $route PUT api/users/edit/:id
 // @desc 修改用户信息
 // @access private
@@ -230,7 +259,7 @@ router.post(
         if (!req.body.identity) userFields.identity = "null";
         if (!req.body.situation) userFields.situation = true;
         // 密码加密
-        bcrypt.hash(userFields.password, 10, function(err, hash) {
+        bcrypt.hash(userFields.password, 10, function (err, hash) {
           if (err) {
             return err;
           }
@@ -249,37 +278,6 @@ router.post(
         });
       }
     });
-  }
-);
-// $route GET api/users/list
-// @desc  获取用户信息接口
-// @access private
-router.get(
-  "/list",
-  passport.authenticate("jwt", { session: false }),
-  // (req, res, nex) => {
-  // 验证参数
-  //   if (!req.query.pagenum || req.query.pagenum <= 0) {
-  //     return res.json({ meta: { msg: "pagenum出错啦" } });
-  //   }
-  //   if (!req.query.pagesize || req.query.pagesize <= 0) {
-  //     return res.json({ meta: { msg: "pagesize出错啦" } });
-  //   }
-  // },
-  (req, res) => {
-    User.find({
-      query: req.query.query,
-      pagenum: req.query.pagenum,
-      pagesize: req.query.pagesize,
-    })
-      .then((user) => {
-        if (!user) {
-          return res.json({ msg: "没找到任何内容呀@_@", status: 400 });
-        }
-        res.json(JSON.parse(JSON.stringify(user)));
-        // res.json(user);
-      })
-      .catch((err) => res.log(err));
   }
 );
 
@@ -309,18 +307,7 @@ router.put(
     }
   }
 );
-// $route PUT api/users/edit/:id
-// @desc 修改用户信息
-// @access private
-router.put(
-  "/edit/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const userInfoFields = {};
-    if (req.body.name) userInfoFields.name = req.body.name;
-    if (req.body.identity) userInfoFields.identity = req.body.identity;
-  }
-);
+
 // $route GET api/users/:id
 // @desc  获取用户信息接口
 // @access private
@@ -345,7 +332,6 @@ router.get(
       .catch((err) => console.log(err));
   }
 );
-
 // $route DELETE api/users/:_id
 // @desc  删除用户信息接口
 // @access private

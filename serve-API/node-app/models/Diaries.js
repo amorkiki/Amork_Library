@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const DiariesSchema = new Schema({
-  user: {
+  creator_id: {
     type: String,
   },
   dateAndTime: {

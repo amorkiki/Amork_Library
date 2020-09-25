@@ -3,6 +3,9 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const ProfileSchema = new Schema({
+  creator_id: {
+    type: String,
+  },
   type: {
     type: Array,
   },

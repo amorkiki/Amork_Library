@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ curUser }}
     <!-- 面包屑导航 -->
     <el-breadcrumb
       separator-class="el-icon-arrow-right"
@@ -14,7 +15,7 @@
     <!-- 卡片视图区域 -->
     <el-card class="box-card">
       <!-- 搜索&添加区域 -->
-      <el-row :gutter="25">
+      <el-row :gutter="25" v-if="curUser.role == 'manager'">
         <el-col :span="12">
           <el-input
             placeholder="请先勾选查找方式..."
@@ -232,6 +233,8 @@ export default {
       }
     }
     return {
+      // 当前用户信息
+      curUser: this.$store.getters.curUser,
       // 获取用户列表的参数对象
       queryInfo: {
         query: ''
@@ -318,11 +321,15 @@ export default {
   methods: {
     // 获取用户列表
     async getUserList() {
-      const { data: res } = await this.$http.get('users/list')
+      const { data: res } = await this.$http.get(
+        `users/list/${this.curUser.role}/${this.curUser.id}`
+      )
       // console.log(res)
-      if (!res) return this.$message.error('没拿到任何信息呀 >_<')
-      this.userlist = res
-      this.total = res.length
+      if (res.meta.status !== 200) {
+        return this.$message.error('没拿到任何信息呀 >_<')
+      }
+      this.userlist = res.data
+      // this.total = res.length
       // console.log(this.userlist)
       // console.log(this.total)
     },
@@ -396,7 +403,7 @@ export default {
       this.findDialogVisible = false
       // console.log(id)
       const { data: res } = await this.$http.get('/users/' + id)
-      // console.log(res)
+      console.log(res)
       if (res.meta.status !== 200) {
         return this.$message.error('获取不到任何信息!!>_<')
       }

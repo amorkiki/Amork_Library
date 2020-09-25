@@ -1,6 +1,8 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
+    {{ notesInfo }}
+    {{ curUser }}
     <el-breadcrumb
       separator-class="el-icon-arrow-right"
       active-text-color="#a38eaa"
@@ -25,11 +27,7 @@
               <el-option label="书名" value="1"></el-option>
               <el-option label="用户" value="2"></el-option>
             </el-select>
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="findNotesList(selected)"
-            ></el-button>
+            <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -38,11 +36,16 @@
           >
         </el-col>
       </el-row>
-      <!-- 图书列表区域 -->
+      <!-- 日记列表区域 -->
       <el-table :data="notesInfo" style="width: 100%" border>
         <el-table-column type="index" width="40px"> </el-table-column>
-        <el-table-column label="User" prop="user"></el-table-column>
-        <el-table-column label="Date" prop="dateAndTime"></el-table-column>
+        <el-table-column label="Creator">{{
+          this.curUser.name
+        }}</el-table-column>
+        <el-table-column
+          label="Create Date"
+          prop="dateAndTime"
+        ></el-table-column>
         <el-table-column label="Books" prop="b_name"></el-table-column>
         <el-table-column label="Control">
           <template slot-scope="scope">
@@ -89,15 +92,9 @@
 export default {
   data() {
     return {
+      curUser: this.$store.getters.curUser,
       // 读书笔记信息
-      notesInfo: {
-        user: '',
-        // 时间选择器
-        dateAndTime: '',
-        // 天气单选框
-        radioWeather: '',
-        b_name: ''
-      },
+      notesInfo: {},
       total: 0
     }
   },
@@ -107,14 +104,16 @@ export default {
   methods: {
     // 获取笔记列表
     async getNotesList() {
-      const res = await this.$http.get('/diaries')
+      const res = await this.$http.get(
+        `/diaries/${this.curUser.role}/${this.curUser.id} `
+      )
       console.log(res.data)
       if (res.status !== 200) return this.$message.error('获取列表失败>_<')
       this.notesInfo = res.data
       this.total = res.data.length
     },
     // 查询笔记
-    findNotesList() {},
+    // findNotesList() {},
     // 点击添加跳转到添加页面
     addNewNotes() {
       this.$router.push('readingnotes/add')

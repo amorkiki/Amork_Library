@@ -28,6 +28,11 @@ const UserSchema = new Schema({
   },
   situation: {
     type: Boolean,
+    default: true,
+  },
+  role: {
+    type: String,
+    default: "common",
   },
 });
 

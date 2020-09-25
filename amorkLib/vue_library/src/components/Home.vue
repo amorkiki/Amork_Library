@@ -25,7 +25,11 @@
           :default-active="activePath"
         >
           <!-- 一级菜单 -->
-          <el-submenu :index="item.id + ''" :key="item.id" v-for="item in menulist">
+          <el-submenu
+            :index="item.id + ''"
+            :key="item.id"
+            v-for="item in menulist"
+          >
             <!-- 一级菜单模板 -->
             <template slot="title">
               <!-- 图标 -->

@@ -44,8 +44,8 @@ export default {
     return {
       // 登录表单的数据绑定对象
       loginForm: {
-        email: 'admin@123.com',
-        password: '123456'
+        email: 'sangqie@woo.com',
+        password: 'sangqie'
       },
       // 表单验证
       loginFormRules: {
@@ -75,7 +75,7 @@ export default {
           'users/login',
           this.loginForm
         )
-        console.log(res)
+        console.log(res.data)
         if (res.meta.status !== 200) {
           return this.$message.error('哎呀>_<没有登录成功')
         } else {
@@ -85,6 +85,7 @@ export default {
           // 页面跳转
           this.$router.push('/home')
         }
+        this.$store.dispatch('getCurUser', res.data)
       })
     }
   }

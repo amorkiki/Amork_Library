@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 Vue.use(Vuex)
+Vue.use(axios)
 
 export default new Vuex.Store({
   state: {
@@ -101,13 +103,33 @@ export default new Vuex.Store({
       },
       { value: '考试', label: '考试' },
       { value: '外文', label: '外文' }
-    ]
+    ],
+    curUser: {}
   },
   mutations: {
-    setCategories(state) {}
+    setCurUser(state, data) {
+      state.curUser.id = data.id
+      state.curUser.name = data.name
+      state.curUser.role = data.role
+      state.curUser.email = data.email
+      state.curUser.identity = data.identity
+      state.curUser.situation = data.situation
+    }
   },
   actions: {
-    getCategories() {}
+    getCurUser({ commit }, data) {
+      // console.log(data)
+      commit('setCurUser', data)
+    }
   },
-  getters: {}
+  getters: {
+    // curUser(state) {
+    //   return function(curUser) {
+    //     return curUser
+    //   }
+    // }
+    curUser(state) {
+      return state.curUser
+    }
+  }
 })

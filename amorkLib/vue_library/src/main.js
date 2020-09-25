@@ -27,9 +27,9 @@ axios.interceptors.request.use(config => {
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 })
-
 // axios挂载到vue的原型对象上
 Vue.prototype.$http = axios
+
 // 富文本编辑引用
 Vue.use(VueQuillEditor /* { default global options } */)
 

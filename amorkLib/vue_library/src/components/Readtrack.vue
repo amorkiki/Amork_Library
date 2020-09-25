@@ -1,8 +1,13 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right" active-text-color="#a38eaa">
-      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa">home</el-breadcrumb-item>
+    <el-breadcrumb
+      separator-class="el-icon-arrow-right"
+      active-text-color="#a38eaa"
+    >
+      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa"
+        >home</el-breadcrumb-item
+      >
       <el-breadcrumb-item>tracks</el-breadcrumb-item>
       <el-breadcrumb-item>reading tracks</el-breadcrumb-item>
     </el-breadcrumb>
@@ -10,8 +15,10 @@
     <el-card>
       <!-- 列表 -->
       <el-table :data="bookList" border style="width: 100%">
-        <el-table-column type="index" width="40px" label="序列"> </el-table-column>
-        <el-table-column prop="type" label="Type" width="60px"> </el-table-column>
+        <el-table-column type="index" width="40px" label="序列">
+        </el-table-column>
+        <el-table-column prop="type" label="Type" width="60px">
+        </el-table-column>
         <el-table-column prop="b_name" label="Name"> </el-table-column>
         <el-table-column prop=" pages" label="Total Pages" width="120px">
           <template slot-scope="scope">
@@ -30,42 +37,98 @@
         <!-- 进度条栏 -->
         <el-table-column label="Progress">
           <template slot-scope="scope">
-            <el-progress :percentage="scope.row.progress" :color="customColorMethod" :stroke-width="12" text-inside></el-progress>
+            <el-progress
+              :percentage="scope.row.progress"
+              :color="customColorMethod"
+              :stroke-width="12"
+              text-inside
+            ></el-progress>
           </template>
         </el-table-column>
         <!-- 明细栏 -->
         <el-table-column label="Show Details" width="220px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="update current prgress" placement="top" :enterable="false">
-              <el-button type="text" @click="changeCur(scope.row._id)"><i class="iconfont icon-exchangerate" style="color: #91ca8d; font-size: 25px"></i> </el-button>
+            <el-tooltip
+              effect="light"
+              content="update current prgress"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button type="text" @click="changeCur(scope.row._id)"
+                ><i
+                  class="iconfont icon-exchangerate"
+                  style="color: #91ca8d; font-size: 25px"
+                ></i>
+              </el-button>
             </el-tooltip>
-            <el-tooltip effect="light" content="show progress" placement="top" :enterable="false">
-              <el-button type="text" @click="showRead"><i class="iconfont icon-pin" style="color: #7288ac"></i></el-button>
+            <el-tooltip
+              effect="light"
+              content="show progress"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button type="text" @click="showRead"
+                ><i class="iconfont icon-pin" style="color: #7288ac"></i
+              ></el-button>
             </el-tooltip>
-            <el-tooltip effect="light" content="show logs" placement="top" :enterable="false">
-              <el-button type="text"><i class="iconfont icon-writing" style="color: #ea7e53"></i></el-button>
+            <el-tooltip
+              effect="light"
+              content="show logs"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button type="text"
+                ><i class="iconfont icon-writing" style="color: #ea7e53"></i
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
     <!-- 更改当前页弹出框 -->
-    <el-dialog title="请输入已阅读完毕的页数..." :visible.sync="pageDialogVisible" width="500px">
-      <el-input prefix-icon="el-icon-s-operation" style="font-size: 18px" v-model="current_p" ref="saveInputRef" @keyup.enter.native="handleInputConfirm">
-        <el-button slot="append" icon="el-icon-check" width="50px" @click="handleInputConfirm"></el-button>
+    <el-dialog
+      title="请输入已阅读完毕的页数..."
+      :visible.sync="pageDialogVisible"
+      width="500px"
+    >
+      <el-input
+        prefix-icon="el-icon-s-operation"
+        style="font-size: 18px"
+        v-model="current_p"
+        ref="saveInputRef"
+        @keyup.enter.native="handleInputConfirm"
+      >
+        <el-button
+          slot="append"
+          icon="el-icon-check"
+          width="50px"
+          @click="handleInputConfirm"
+        ></el-button>
       </el-input>
     </el-dialog>
     <!-- 阅读进度弹出框 -->
-    <el-dialog title="Book's Reading-Track Steps" :visible.sync="readDialogVisible" width="40%">
+    <el-dialog
+      title="Book's Reading-Track Steps"
+      :visible.sync="readDialogVisible"
+      width="40%"
+    >
       <!-- 时间线组件 -->
       <el-timeline>
-        <el-timeline-item v-for="(readingSteps, index) in readingSteps" :key="index" :timestamp="readingSteps.timestamp" icon="iconfont icon-arrow-up" size="large">
+        <el-timeline-item
+          v-for="(readingSteps, index) in readingSteps"
+          :key="index"
+          :timestamp="readingSteps.timestamp"
+          icon="iconfont icon-arrow-up"
+          size="large"
+        >
           {{ readingSteps.progress }}
         </el-timeline-item>
       </el-timeline>
       <!-- 底部按钮区域 -->
       <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="readDialogVisible = false"> hide </el-button>
+        <el-button type="info" @click="readDialogVisible = false">
+          hide
+        </el-button>
       </div>
     </el-dialog>
     <!-- 阅读笔记明细  -->
@@ -75,6 +138,7 @@
 export default {
   data() {
     return {
+      curUser: this.$store.getters.curUser,
       bookList: [],
       // 点击修改页数是拿到的书的pages
       current_pages: 0,
@@ -98,9 +162,12 @@ export default {
   methods: {
     // 获取图书列表
     async getBookList() {
-      const { data: res } = await this.$http.get('profiles', {
-        params: this.queryInfo
-      })
+      const { data: res } = await this.$http.get(
+        `profiles/${this.curUser.role}/${this.curUser.id}`,
+        {
+          params: this.queryInfo
+        }
+      )
       // console.log(res)
       if (res.meta.status !== 200) {
         return this.$message.error('这里没啥内容@_@')

@@ -15,7 +15,7 @@ const Profile = require("../../models/Profile");
 // @desc  创建信息接口
 // @access private
 router.post(
-  "/add",
+  "/add/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     //查询数据库中是否拥有该信息
@@ -27,7 +27,7 @@ router.post(
         });
       } else {
         const profileFields = new Profile();
-
+        profileFields.creator_id = req.params.id;
         if (req.body.type)
           profileFields.type = req.body.type[req.body.type.length - 1];
         if (req.body.b_name) profileFields.b_name = req.body.b_name;
@@ -66,33 +66,41 @@ router.post(
 // @desc  获取所有信息接口
 // @access private
 router.get(
-  "/",
+  "/:role/:id",
   passport.authenticate("jwt", { session: false }),
-  // (req, res, next) => {
-  //   // 参数验证;
-  //   if (!req.query.pagenum || req.query.pagenum <= 0)
-  //     return res.json(null, 400, "pagenum 参数错误");
-  //   if (!req.query.pagesize || req.query.pagesize <= 0)
-  //     return res.json(null, 400, "pagesize 参数错误");
-  //   next();
-  // },
   (req, res) => {
-    Profile.find({
-      pagenum: req.params.pagenum,
-      pagesize: req.params.pagesize,
-    })
-      .then((profile) => {
-        if (!profile) {
-          return res.json("没找到任何内容呀@_@");
-        }
-        const allProfiles = profile;
-        // res.json(JSON.parse(JSON.stringify(profile)));
-        res.json({
-          data: allProfiles,
-          meta: { success: true, status: 200 },
-        });
+    if (req.params.role === "common") {
+      Profile.find({
+        creator_id: req.params.id,
       })
-      .catch((err) => res.status(404).json(err));
+        .then((profile) => {
+          if (!profile) {
+            return res.json("没找到任何内容呀@_@");
+          }
+          const allProfiles = profile;
+          // res.json(JSON.parse(JSON.stringify(profile)));
+          res.json({
+            data: allProfiles,
+            meta: { success: true, status: 200 },
+          });
+        })
+        .catch((err) => res.status(404).json(err));
+    }
+    if (req.params.role === "manager") {
+      Profile.find()
+        .then((profile) => {
+          if (!profile) {
+            return res.json("没找到任何内容呀@_@");
+          }
+          const allProfiles = profile;
+          // res.json(JSON.parse(JSON.stringify(profile)));
+          res.json({
+            data: allProfiles,
+            meta: { success: true, status: 200 },
+          });
+        })
+        .catch((err) => res.status(404).json(err));
+    }
   }
 );
 

@@ -1,6 +1,7 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
+    {{ curUser }}
     <el-breadcrumb
       separator-class="el-icon-arrow-right"
       active-text-color="#a38eaa"
@@ -272,6 +273,8 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
+      // 获取当前用户信息
+      curUser: this.$store.getters.curUser,
       // 获取用户列表的参数对象
       queryInfo: {
         query: '',
@@ -333,7 +336,6 @@ export default {
   },
   created() {
     this.getBookList()
-    // this.$store.dispatch('getCategories')
   },
   computed: {
     ...mapState(['bookCateList'])
@@ -341,9 +343,12 @@ export default {
   methods: {
     // 获取图书列表
     async getBookList() {
-      const { data: res } = await this.$http.get('profiles', {
-        params: this.queryInfo
-      })
+      const { data: res } = await this.$http.get(
+        `profiles/${this.curUser.role}/${this.curUser.id}`,
+        {
+          params: this.queryInfo
+        }
+      )
       // console.log(res)
       if (res.meta.status !== 200) {
         return this.$message.error('这里没啥内容@_@')
@@ -380,10 +385,10 @@ export default {
       this.$refs.addBookFormRef.validate(async valid => {
         if (!valid) return this.$message.error('请输入正确的图书信息呦#_#')
         const { data: res } = await this.$http.post(
-          'profiles/add',
+          'profiles/add/' + this.curUser.id,
           this.addBookForm
         )
-        // console.log(res)
+        console.log(res)
         if (res.meta.status !== 200 && res.meta.status !== 400) {
           return this.$message.error('添加图书失败>_#')
         } else if (res.meta.status === 401) {
