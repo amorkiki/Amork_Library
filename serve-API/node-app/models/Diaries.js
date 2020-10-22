@@ -14,7 +14,6 @@ const DiariesSchema = new Schema({
   },
   b_name: {
     type: String,
-
     required: true,
   },
   b_chapters: {
@@ -22,12 +21,14 @@ const DiariesSchema = new Schema({
   },
   b_author: {
     type: String,
-
-    required: true,
   },
   content: {
     type: String,
     required: true,
   },
+  intro: {
+    type: String,
+    required:true
+  }
 });
 module.exports = Diaries = mongoose.model("diaries", DiariesSchema);

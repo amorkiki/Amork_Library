@@ -62,13 +62,15 @@ router.post(
   }
 );
 
-// $route GET api/profiles/
-// @desc  获取所有信息接口
+// $route GET api/profiles/角色/用户id
+// @desc  获取所有图书信息接口
 // @access private
 router.get(
   "/:role/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    let pagenum = req.params.pagenum;
+    let pagesize = req.params.pagesize;
     if (req.params.role === "common") {
       Profile.find({
         creator_id: req.params.id,
@@ -87,19 +89,36 @@ router.get(
         .catch((err) => res.status(404).json(err));
     }
     if (req.params.role === "manager") {
-      Profile.find()
-        .then((profile) => {
+      
+      Profile.find().
+        skip(pagesize * pagenum - pagesize).limit(pagesize)
+        .exec((err, profile) => {
+          if (err) {
+            res.json(err)
+          } 
           if (!profile) {
             return res.json("没找到任何内容呀@_@");
           }
           const allProfiles = profile;
-          // res.json(JSON.parse(JSON.stringify(profile)));
           res.json({
             data: allProfiles,
             meta: { success: true, status: 200 },
           });
+          
         })
-        .catch((err) => res.status(404).json(err));
+
+        // .then((profile) => {
+        //   if (!profile) {
+        //     return res.json("没找到任何内容呀@_@");
+        //   }
+        //   const allProfiles = profile;
+        //   // res.json(JSON.parse(JSON.stringify(profile)));
+        //   res.json({
+        //     data: allProfiles,
+        //     meta: { success: true, status: 200 },
+        //   });
+        // })
+        // .catch((err) => res.status(404).json(err));
     }
   }
 );

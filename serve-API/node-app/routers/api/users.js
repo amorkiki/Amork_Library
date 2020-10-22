@@ -9,7 +9,7 @@ const keys = require("../../config/keys");
 const passport = require("passport");
 const { findById } = require("../../models/User");
 const { query } = require("express");
-const { json } = require("body-parser");
+const { json } = require("body-parser");  //save post请求参数
 
 // $route GET api/users/test
 // @desc  返回请求的json数据
@@ -105,7 +105,7 @@ router.post("/login", (req, res) => {
             avatar: user.avatar,
             identity: user.identity,
             situation: user.situation,
-            role: user.role,
+            role: 'common',
           };
           jwt.sign(
             rule,
@@ -209,6 +209,7 @@ router.put(
     const userInfoFields = {};
     if (req.body.name) userInfoFields.name = req.body.name;
     if (req.body.identity) userInfoFields.identity = req.body.identity;
+    if (req.body.role) userInfoFields.role = req.body.role;
 
     User.findOneAndUpdate(
       { _id: req.params.id },
@@ -255,9 +256,11 @@ router.post(
           password: req.body.password,
           identity: req.body.identity,
           situation: req.body.situation,
+          role:req.body.role
         });
         if (!req.body.identity) userFields.identity = "null";
         if (!req.body.situation) userFields.situation = true;
+        if(!req.body.role) userFields.role="common"
         // 密码加密
         bcrypt.hash(userFields.password, 10, function (err, hash) {
           if (err) {

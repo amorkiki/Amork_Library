@@ -38,7 +38,7 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 
 app.get("/", (req, res) => {
-  res.send("hello hello");
+  res.send("hello node-app");
 });
 
 // 使用routers
