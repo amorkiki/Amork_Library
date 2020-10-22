@@ -1,11 +1,9 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right" active-text-color="#a38eaa">
-      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa">home</el-breadcrumb-item>
-      <el-breadcrumb-item>datas</el-breadcrumb-item>
-      <el-breadcrumb-item>category pie</el-breadcrumb-item>
-    </el-breadcrumb>
+
+    <am-crumbs pre="datas" cur="category pie">category pie</am-crumbs>
+
     <!-- 卡片视图区 -->
     <el-card>
       <div id="pie" style="width: 900px;height:500px;"></div>
@@ -13,8 +11,10 @@
   </div>
 </template>
 <script>
+import amCrumbs from '../cmps/breadCrumb'
 import echarts from 'echarts'
 export default {
+  components: { amCrumbs },
   data() {
     return {}
   },
@@ -29,7 +29,18 @@ export default {
         legend: {
           orient: 'vertical',
           left: 10,
-          data: ['直达', '营销广告', '搜索引擎', '邮件营销', '联盟广告', '视频广告', '百度', '谷歌', '必应', '其他']
+          data: [
+            '直达',
+            '营销广告',
+            '搜索引擎',
+            '邮件营销',
+            '联盟广告',
+            '视频广告',
+            '百度',
+            '谷歌',
+            '必应',
+            '其他'
+          ]
         },
         series: [
           {

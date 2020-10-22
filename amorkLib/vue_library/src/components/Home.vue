@@ -1,7 +1,7 @@
 <template>
   <el-container class="home_container">
     <!-- 头部区域 -->
-    <el-header class="">
+    <el-header >
       <span>Welcome to reading track system ^_^</span>
       <el-button type="info" @click="logout"> Esc</el-button>
     </el-header>
@@ -184,6 +184,7 @@ export default {
     line-height: 60px;
     font-size: 25px;
     font-family: Marker Felt;
+    letter-spacing: 2px;
   }
 }
 .el-aside {
@@ -191,6 +192,7 @@ export default {
   height: 100%;
   font-family: Marker Felt;
   color: #fff;
+  letter-spacing: 1px;
   .el-menu {
     border-right: none;
     .el-submenu span {

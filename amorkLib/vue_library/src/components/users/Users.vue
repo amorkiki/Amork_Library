@@ -1,7 +1,8 @@
 <template>
   <div>
-    {{ curUser }}
     <!-- 面包屑导航 -->
+    {{curUser}}-------
+    {{creator}}
     <el-breadcrumb
       separator-class="el-icon-arrow-right"
       active-text-color="#a38eaa"
@@ -86,7 +87,7 @@
               content="skip to booklist"
               placement="top"
               :enterable="false"
-              ><el-button type="text">
+              ><el-button type="text" @click="skipToList(scope.row,curUser)">
                 <i
                   class="iconfont icon-Moneymanagement"
                   style="color: #7288ac"
@@ -101,7 +102,7 @@
         @current-change="handleCurrentChange"
         :current-page="1"
         :page-sizes="[1, 5, 10]"
-        page-size="8"
+        :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       >
@@ -123,6 +124,9 @@
         </el-form-item>
         <el-form-item label="Your email" prop="email" required>
           <el-input v-model="addForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="Set a role" prop="role" >
+          <el-input v-model="addForm.role" placeholder="defalut: common"></el-input>
         </el-form-item>
         <el-form-item label="Your identity" prop="identity">
           <el-input v-model="addForm.identity"></el-input>
@@ -149,6 +153,9 @@
         </el-form-item>
         <el-form-item label="Name" prop="name">
           <el-input v-model="editForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="Role" prop="role">
+          <el-input v-model="editForm.role"  :disabled="editForm.name=='amork'? false:true"></el-input>
         </el-form-item>
         <el-form-item label="Identity" prop="identity" required>
           <el-input v-model="editForm.identity"></el-input>
@@ -208,7 +215,7 @@
               content="skip to booklist"
               placement="top"
               :enterable="false"
-              ><el-button type="text">
+              ><el-button type="text" >
                 <i
                   class="iconfont icon-Moneymanagement"
                   style="color: #7288ac"
@@ -235,9 +242,13 @@ export default {
     return {
       // 当前用户信息
       curUser: this.$store.getters.curUser,
+      // 创建者信息
+      creator: this.$store.getters.creator,
       // 获取用户列表的参数对象
       queryInfo: {
-        query: ''
+        query: '',
+        pagesize: 10,
+        pagenum: 1
       },
       // 保存请求回来的用户列表数据
       userlist: [],
@@ -317,6 +328,9 @@ export default {
   },
   created() {
     this.getUserList()
+    if (this.creator) {
+      this.creator = {}
+    }
   },
   methods: {
     // 获取用户列表
@@ -329,7 +343,7 @@ export default {
         return this.$message.error('没拿到任何信息呀 >_<')
       }
       this.userlist = res.data
-      // this.total = res.length
+      this.total = res.length
       // console.log(this.userlist)
       // console.log(this.total)
     },
@@ -350,10 +364,11 @@ export default {
       this.findDialogVisible = true
     },
     // 表格状态颜色
-    tableRowClassName({ row, rowIndex }) {
-      if (rowIndex === 0) {
+    tableRowClassName({ row }) {
+      // console.log(row.situation)
+      if (row.situation === true) {
         return 'success-row'
-      } else if (rowIndex === 4) {
+      } else if (row.situation === false) {
         return 'warning-row'
       }
       return ''
@@ -424,7 +439,7 @@ export default {
         // 发起修改请求
         const { data: res } = await this.$http.put(
           '/users/edit/' + this.editForm._id,
-          { name: this.editForm.name, identity: this.editForm.identity }
+          { name: this.editForm.name, identity: this.editForm.identity, role: this.editForm.role }
         )
         console.log(res)
         // if (res.meta.status !== 200) {
@@ -460,6 +475,23 @@ export default {
         }
         this.$message.success('成功删除该用户@_@')
         this.getUserList()
+      }
+    },
+    // 点击跳转到图书列表
+    async skipToList(row) {
+      console.log(row)
+      if (row.role === 'manager') { 
+        this.$store.dispatch('getCreator', row)
+        this.$router.push('/booklist')
+      } else {
+        const { data: res } = await this.$http.get(`profiles/${row.role}/${row._id}`)
+        console.log(res)
+        if (res.data.length <= 0) { 
+          this.$message.error('该用户还没添加任何图书信息')
+          return
+        } 
+        this.$store.dispatch('getCreator', row)
+        this.$router.push('/booklist')
       }
     }
   }

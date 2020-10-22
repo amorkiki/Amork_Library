@@ -1,6 +1,7 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
+    {{curBook}}---{{this.notesInfo}}
     <el-breadcrumb
       separator-class="el-icon-arrow-right"
       active-text-color="#a38eaa"
@@ -15,7 +16,6 @@
       <el-breadcrumb-item>add notes</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图区 -->
-    {{ notesInfo.dateAndTime }}
     <el-card class="box-card">
       <!-- 消息提示 -->
       <el-alert
@@ -53,6 +53,9 @@
               <!-- 天气插件 -->
               <div id="weather-v2-plugin-simple"></div>
               <!-- 日期选择器 -->
+              <span class="behind-input"
+                >Choose date and time for this log...</span
+              >
               <el-date-picker
                 v-model="notesInfo.dateAndTime"
                 align="right"
@@ -61,14 +64,11 @@
                 :picker-options="datePickerOptions"
                 value-format="yyyy-MM-dd"
               >
-              </el-date-picker>
-
-              <span class="behind-input"
-                >Choose date and time for this log...</span
-              >
+              </el-date-picker>            
             </el-form-item>
             <el-form-item>
               <!-- 天气单选框 -->
+              <span class="behind-input">Choose the weather here...</span>
               <el-radio-group
                 v-model="notesInfo.radioWeather"
                 @change="clickWeather"
@@ -94,7 +94,6 @@
                 ></el-radio>
                 <el-radio :label="8"><i class="iconfont icon-wu"></i></el-radio>
               </el-radio-group>
-              <span class="behind-input">Choose the weather here...</span>
             </el-form-item>
             <el-form-item>
               <el-button
@@ -110,28 +109,24 @@
             <!-- 图书信息表单 -->
             <el-form :model="notesInfo" :rules="addBookInfoRules">
               <el-form-item
-                label="About Book's Name"
-                prop="b_name"
+                label="Book's Name"
                 style="width: 80%"
               >
-                <el-input v-model="notesInfo.b_name"></el-input>
+              {{curBook.b_name}}
               </el-form-item>
               <el-form-item
-                label="About Book's Author"
-                prop="b_author"
-                style="width: 80%"
-              >
-                <el-input v-model="notesInfo.b_author"></el-input>
-              </el-form-item>
-              <el-form-item
-                label="About Chapters"
+                label="Chapter"
                 prop="b_chapters"
                 style="width: 80%"
               >
                 <el-input v-model="notesInfo.b_chapters"></el-input>
               </el-form-item>
-              <el-form-item label="Add remarks" style="width: 80%">
-                <el-input v-model="notesInfo.b_remarks"></el-input>
+              <el-form-item
+                label="Short introduction"
+                style="width: 80%"
+                prop="intro"
+              >
+                <el-input v-model="notesInfo.intro"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button
@@ -147,7 +142,6 @@
           <el-tab-pane label="Reading Notes" name="2">
             <el-form-item style="width: 95%">
               <quill-editor v-model="notesInfo.content" />
-
               <el-button
                 type="primary"
                 class="bottom-btn"
@@ -182,21 +176,14 @@ export default {
   data() {
     return {
       curUser: this.$store.getters.curUser,
+      curBook: this.$store.getters.curBook,
+      bookInfo: [],
       // 图片地址
       imgUrl: '../assets/15.jpeg',
       // 步骤条和tab的绑定
       activeIndex: '',
-      notesInfo: {
-        // // 转换后的时间
-        // dateAndtime: '',
-        // // 天气单选框
-        // radioWeather: '',
-        // b_name: '',
-        // b_chapters: '',
-        // b_author: '',
-        // content: ''
-      },
-
+      notesInfo: {},
+      // 日期选择
       datePickerOptions: {
         shortcuts: [
           {
@@ -207,23 +194,24 @@ export default {
           }
         ]
       },
+      // 图书信息验证规则
       addBookInfoRules: {
-        b_name: [
+        b_chapters: [
           {
             required: true,
-            message: 'which book you wanna refer to ?',
+            message: 'chapters you wanna refer to ? ',
             trigger: 'blur'
           }
         ],
-        b_author: [{ message: 'who write this book ? ', trigger: 'blur' }],
-        b_chapters: [
+        intro: [
           {
-            message: 'what chapters you wanna refer to ? ',
+            required: true,
+            message:
+              'less than 10 words as a short view ',
             trigger: 'blur'
           }
         ]
       }
-      // notesInfoArray: []
     }
   },
   methods: {
@@ -250,35 +238,40 @@ export default {
       // console.log(w)
       this.notesInfo.radioWeather = w
     },
+    // 添加新笔记
     async addNewNotes() {
+      // alert(this.curUser.id)
+      // alert(this.curBook.b_name)
       const { data: res } = await this.$http.post(
-        '/diaries/add/' + this.curUser.id,
+        `/diaries/add/${this.curUser.id}/${this.curBook.b_name}`,
         this.notesInfo
       )
-      // console.log(res)
-      if (res.meta.status !== 200) {
+      console.log(res)
+      if (!res) {
         return this.$message.error('提交失败啦>_<')
       }
-      this.notesInfo = res.data
-      console.log(this.notesInfo)
+      this.notesInfo = res
+      // console.log(this.notesInfo)
       this.$message.success('提交成功啦^_^')
-      this.$router.go(-1)
+      this.$router.push('/readingnotes')
     },
-
     // tabs切换时验证
     leaveTab(val, oldVal) {
-      if (oldVal === '0') {
-        if (!this.notesInfo.dateAndtime) {
+      // console.log(typeof val, oldVal)
+      const info =  JSON.parse(JSON.stringify(this.notesInfo))
+      if (oldVal === '0' && val === '1') {
+        // console.log(info)
+        if (!info.dateAndTime) {
           this.$message.error('请添加日期')
           return false
         }
-      } else if (oldVal === '1') {
-        if (!this.notesInfo.b_name) {
-          this.$message.error('请添加书目')
+      } else if (oldVal === '1' && val === '2') {
+        if (!info.intro) {
+          this.$message.error('请添加简介')
           return false
         }
-      } else if (oldVal === '2') {
-        if (!this.notesInfo.content) {
+      } else if (oldVal === '2' && val === '3') {
+        if (!info.content) {
           this.$message.error('还没有任何笔记内容呀')
           return false
         }
@@ -335,7 +328,7 @@ export default {
 }
 .finish-img {
   height: 500px;
-  background: url('../assets/15.jpeg') no-repeat;
+  background: url('../../assets/15.jpeg') no-repeat;
   background-size: cover;
 }
 </style>

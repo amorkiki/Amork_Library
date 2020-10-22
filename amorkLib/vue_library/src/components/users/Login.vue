@@ -3,7 +3,7 @@
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avatar_box">
-        <img src="../assets/avatar.jpeg" alt="" />
+        <img src="../../assets/avatar.jpeg" alt="" />
       </div>
       <!-- 表单区域 -->
       <el-form
@@ -44,8 +44,8 @@ export default {
     return {
       // 登录表单的数据绑定对象
       loginForm: {
-        email: 'sangqie@woo.com',
-        password: 'sangqie'
+        email: 'admin@123.com',
+        password: '123456'
       },
       // 表单验证
       loginFormRules: {
@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     loginFormRef() {
-      console.log(this)
+      // console.log(this)
       this.$refs.loginFormRef.resetFields()
     },
     login() {
@@ -75,7 +75,11 @@ export default {
           'users/login',
           this.loginForm
         )
-        console.log(res.data)
+        // console.log(typeof res.data)
+        if (!res.data) {
+          this.$message.error('请输入正确的用户名记密码')
+          return
+        }
         if (res.meta.status !== 200) {
           return this.$message.error('哎呀>_<没有登录成功')
         } else {
@@ -95,7 +99,7 @@ export default {
 <style lang="less" scoped>
 .login_container {
   height: 100%;
-  background: url(../assets/Avril1.jpeg) no-repeat;
+  background: url(../../assets/Avril1.jpeg) no-repeat;
   background-size: cover;
 }
 .login_box {

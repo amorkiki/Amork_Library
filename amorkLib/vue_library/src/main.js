@@ -29,6 +29,7 @@ axios.interceptors.request.use(config => {
 })
 // axios挂载到vue的原型对象上
 Vue.prototype.$http = axios
+Vue.use(axios)
 
 // 富文本编辑引用
 Vue.use(VueQuillEditor /* { default global options } */)

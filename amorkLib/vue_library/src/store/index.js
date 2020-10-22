@@ -104,7 +104,9 @@ export default new Vuex.Store({
       { value: '考试', label: '考试' },
       { value: '外文', label: '外文' }
     ],
-    curUser: {}
+    curUser: {},
+    creator: {},
+    curBook: {}
   },
   mutations: {
     setCurUser(state, data) {
@@ -114,12 +116,29 @@ export default new Vuex.Store({
       state.curUser.email = data.email
       state.curUser.identity = data.identity
       state.curUser.situation = data.situation
+    },
+    setCreator (state, data) {
+      state.creator.id = data._id
+      state.creator.name = data.name
+      state.creator.role = data.role
+      state.creator.identity = data.identity
+      state.creator.situation = data.situation
+    },
+    setCurBook (state, data) {
+      state.curBook.b_name = data.b_name
+      state.curBook._id = data._id
     }
   },
   actions: {
     getCurUser({ commit }, data) {
       // console.log(data)
       commit('setCurUser', data)
+    },
+    getCreator ({ commit }, data) {
+      commit('setCreator', data)
+    },
+    getCurBook ({ commit }, data) {
+      commit('setCurBook', data)
     }
   },
   getters: {
@@ -130,6 +149,12 @@ export default new Vuex.Store({
     // }
     curUser(state) {
       return state.curUser
+    },
+    creator (state) {
+      return state.creator
+    },
+    curBook (state) {
+      return state.curBook
     }
   }
 })

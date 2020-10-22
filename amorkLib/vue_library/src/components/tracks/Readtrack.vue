@@ -1,16 +1,9 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb
-      separator-class="el-icon-arrow-right"
-      active-text-color="#a38eaa"
-    >
-      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa"
-        >home</el-breadcrumb-item
-      >
-      <el-breadcrumb-item>tracks</el-breadcrumb-item>
-      <el-breadcrumb-item>reading tracks</el-breadcrumb-item>
-    </el-breadcrumb>
+    {{curUser}}-------
+    
+    <am-crumbs pre="tracks" cur="reading tracks"></am-crumbs>
     <!-- 卡片视图区 -->
     <el-card>
       <!-- 列表 -->
@@ -28,12 +21,6 @@
             </el-tag>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="Current" width="85px"> -->
-        <!-- 当前页数 -->
-        <!-- <template slot-scope="scope">
-            <el-input v-model="current_p" ref="saveInputRef" @keyup.enter.native="fn(scope.row)" @blur="fn(scope.row)"> </el-input>
-          </template> -->
-        <!-- </el-table-column> -->
         <!-- 进度条栏 -->
         <el-table-column label="Progress">
           <template slot-scope="scope">
@@ -63,12 +50,12 @@
             </el-tooltip>
             <el-tooltip
               effect="light"
-              content="show progress"
+              content="add new logs"
               placement="top"
               :enterable="false"
             >
-              <el-button type="text" @click="showRead"
-                ><i class="iconfont icon-pin" style="color: #7288ac"></i
+              <el-button type="text" @click="addNewNotes(scope.row)"
+                ><i class="iconfont icon-writing" style="color: #7288ac"></i
               ></el-button>
             </el-tooltip>
             <el-tooltip
@@ -77,8 +64,8 @@
               placement="top"
               :enterable="false"
             >
-              <el-button type="text"
-                ><i class="iconfont icon-writing" style="color: #ea7e53"></i
+              <el-button type="text" @click="showRead(scope.row.b_name)"
+                ><i class="iconfont icon-contacts" style="color: #ea7e53"></i
               ></el-button>
             </el-tooltip>
           </template>
@@ -87,7 +74,7 @@
     </el-card>
     <!-- 更改当前页弹出框 -->
     <el-dialog
-      title="请输入已阅读完毕的页数..."
+      title="今天读到那一页啦？@_@"
       :visible.sync="pageDialogVisible"
       width="500px"
     >
@@ -106,22 +93,27 @@
         ></el-button>
       </el-input>
     </el-dialog>
-    <!-- 阅读进度弹出框 -->
+    <!-- log时间线弹出框 -->
     <el-dialog
       title="Book's Reading-Track Steps"
       :visible.sync="readDialogVisible"
-      width="40%"
+      width="60%"
     >
       <!-- 时间线组件 -->
       <el-timeline>
         <el-timeline-item
           v-for="(readingSteps, index) in readingSteps"
           :key="index"
-          :timestamp="readingSteps.timestamp"
+          :timestamp="readingSteps.dateAndTime"
+          placement="top"
           icon="iconfont icon-arrow-up"
-          size="large"
         >
-          {{ readingSteps.progress }}
+          <el-card>
+            <h3>Update {{ readingSteps.b_name }}</h3>
+            <h4>update chapter: {{ readingSteps.b_chapters }}</h4>
+            <p>about: {{readingSteps.intro}}</p>
+            <p>Submit at {{ readingSteps.dateAndTime }}</p>
+          </el-card>
         </el-timeline-item>
       </el-timeline>
       <!-- 底部按钮区域 -->
@@ -131,11 +123,12 @@
         </el-button>
       </div>
     </el-dialog>
-    <!-- 阅读笔记明细  -->
   </div>
 </template>
 <script>
+import amCrumbs from '../cmps/breadCrumb'
 export default {
+  components: { amCrumbs },
   data() {
     return {
       curUser: this.$store.getters.curUser,
@@ -153,7 +146,7 @@ export default {
       // 进度条百分比和颜色
       readDialogVisible: false,
       // 阅读进度时间戳
-      readingSteps: [{ progress: '', timestamp: '' }]
+      readingSteps: []
     }
   },
   created() {
@@ -178,25 +171,23 @@ export default {
       this.pageArr = this.bookList.map(key => key.pages)
       // console.log(this.newArr[3])
     },
+    
     // 进度条颜色变化
     customColorMethod(percentage) {
       if (percentage < 20) {
         return '#f56c6c'
       } else if (percentage < 50) {
         return '#e6a23c'
-      } else if (percentage < 95) {
+      } else if (percentage < 90) {
         return '#6f7ad3'
       } else {
         return '#5cb87a'
       }
     },
+    
     // 点击确定更改阅读进度按钮
     async handleInputConfirm(id) {
       this.pageDialogVisible = false
-      // console.log(this.current_p)
-      // console.log(this.current_pages)
-      // console.log(this.id)
-
       if (this.current_p !== 0 && this.current_pages !== 0) {
         const p = Math.round((this.current_p / this.current_pages) * 100)
         // console.log(p)
@@ -219,6 +210,7 @@ export default {
       this.$message.success('更新成功>_<')
       this.getBookList()
     },
+    
     // 更改当前页弹出框
     async changeCur(id) {
       // console.log(id)
@@ -236,8 +228,27 @@ export default {
     },
 
     // 显示阅读进度按钮
-    showRead() {
+    async showRead(val) {
       this.readDialogVisible = true
+      // alert(val)书名
+      const { data: res } = await this.$http.get(
+        `/diaries/find/1/${val} `
+      )
+      console.log(res.data)
+      if (res.data.length <= 0) {
+        this.$message.error('获取笔记列表失败>_<') 
+        return 
+      }
+      this.readingSteps = res.data
+    },
+
+    // 点击添加跳转到添加页面
+    addNewNotes(scope) {
+      console.log(scope)
+      // const { data: res } = await this.$http(`/profiles/find/1/${scope.b_name}`)
+      // console.log(res.data)
+      this.$store.dispatch('getCurBook', scope)
+      this.$router.push('/readingnotes/add')
     }
   }
 }

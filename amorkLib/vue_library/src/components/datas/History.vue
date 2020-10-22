@@ -1,11 +1,7 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right" active-text-color="#a38eaa">
-      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa">home</el-breadcrumb-item>
-      <el-breadcrumb-item>datas</el-breadcrumb-item>
-      <el-breadcrumb-item>history line</el-breadcrumb-item>
-    </el-breadcrumb>
+    <am-crumbs pre="datas" cur="history line"></am-crumbs>
     <!-- 卡片视图区 -->
     <el-card>
       <!-- tab栏 -->
@@ -24,9 +20,12 @@
   </div>
 </template>
 <script>
+import amCrumbs from '../cmps/breadCrumb'
 // 引入echarts
 import echarts from 'echarts'
+
 export default {
+  components: { amCrumbs },
   data() {
     return {
       // tab栏切换
@@ -42,9 +41,31 @@ export default {
   mounted() {
     ;(function() {
       var lineChart = echarts.init(document.getElementById('line'))
-      var dataAxis = ['自然', '互联网', '文学小说', '语言文字', '艺术鉴赏', '历史', '政经法', '哲学心理', '考试', '外文']
+      var dataAxis = [
+        '自然',
+        '互联网',
+        '文学小说',
+        '语言文字',
+        '艺术鉴赏',
+        '历史',
+        '政经法',
+        '哲学心理',
+        '考试',
+        '外文'
+      ]
       var data = [220, 182, 191, 234, 290, 330, 310, 123, 442, 321]
-      var colorArr = ['#759AA0', '#E79D86', '#8DC1A9', '#EA7E53', '#EFDE79', '#73A272', '#73BABC', '#7288AC', '#91CA8D', '#F4A042']
+      var colorArr = [
+        '#759AA0',
+        '#E79D86',
+        '#8DC1A9',
+        '#EA7E53',
+        '#EFDE79',
+        '#73A272',
+        '#73BABC',
+        '#7288AC',
+        '#91CA8D',
+        '#F4A042'
+      ]
       // var yMax = 500
       // var dataShadow = []
       // for (var i = 0; i < data.length; i++) {
@@ -142,7 +163,10 @@ export default {
         var dayTime = 3600 * 24 * 1000
         var data = []
         for (var time = date; time < end; time += dayTime) {
-          data.push([echarts.format.formatTime('yyyy-MM-dd', time), Math.floor(Math.random() * 1000)])
+          data.push([
+            echarts.format.formatTime('yyyy-MM-dd', time),
+            Math.floor(Math.random() * 1000)
+          ])
         }
         return data
       }

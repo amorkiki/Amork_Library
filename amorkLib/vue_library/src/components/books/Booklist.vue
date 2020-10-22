@@ -1,17 +1,9 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    {{ curUser }}
-    <el-breadcrumb
-      separator-class="el-icon-arrow-right"
-      active-text-color="#a38eaa"
-    >
-      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa"
-        >home</el-breadcrumb-item
-      >
-      <el-breadcrumb-item>books</el-breadcrumb-item>
-      <el-breadcrumb-item>booklist</el-breadcrumb-item>
-    </el-breadcrumb>
+    {{curUser}}-------
+    {{creator}}
+    <am-crumbs pre="book" cur="booklist"></am-crumbs>
     <!-- 卡片视图区 -->
     <el-card class="box-card">
       <!-- 搜索&添加区域 -->
@@ -101,7 +93,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="queryInfo.pagenum"
-        :page-sizes="[1, 5, 10]"
+        :page-sizes="[3, 5, 10, 15]"
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -200,81 +192,21 @@
       <el-button type="warning" @click="editBookInfo()"> yes </el-button>
     </el-dialog>
     <!-- 查询图书信息弹出的对话框 -->
-    <el-dialog
-      title="Find Books @_@!"
-      :visible.sync="findDialogVisible"
-      width="90%"
-    >
-      <el-table :data="findBook" border style="width: 100%">
-        <el-table-column type="index" width="30px"> </el-table-column>
-        <el-table-column prop="type" label="Type" width="70px">
-        </el-table-column>
-        <el-table-column prop="b_name" label="Name"> </el-table-column>
-        <el-table-column prop="author" label="Author" width="80px">
-        </el-table-column>
-        <el-table-column prop="publish" label="Publish"> </el-table-column>
-        <el-table-column
-          prop="isbn_num"
-          label="ISBN"
-          width="150px"
-        ></el-table-column>
-        <el-table-column prop="pages" label="PAGES" width="70px">
-        </el-table-column>
-        <!-- 备注栏 -->
-        <el-table-column label="Remark"></el-table-column>
-        <!-- 操作栏 -->
-        <el-table-column label="Control" width="215px">
-          <template slot-scope="scope">
-            <el-tooltip
-              effect="light"
-              content="edit"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button
-                type="info"
-                icon="iconfont icon-customization"
-                size="mini"
-                @click="showEditDialog(scope.row._id)"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip
-              effect="dark"
-              content="delete"
-              placement="top"
-              :enterable="false"
-              ><el-button
-                type="danger"
-                icon="iconfont icon-close1"
-                size="mini"
-                @click="removeBookById(scope.row._id)"
-              ></el-button
-            ></el-tooltip>
-            <el-tooltip
-              effect="light"
-              content="skip to readingnotes"
-              placement="top"
-              :enterable="false"
-              ><el-button
-                type="warning"
-                icon="iconfont icon-attachment"
-                size="mini"
-              ></el-button
-            ></el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-dialog>
   </div>
 </template>
 <script>
+import amCrumbs from '../cmps/breadCrumb'
+// import amSearch from '../cmps/searchInput'
 import { mapState } from 'vuex'
 
 export default {
+  components: { amCrumbs },
   data() {
     return {
       // 获取当前用户信息
       curUser: this.$store.getters.curUser,
+      // 创建者信息
+      creator: this.$store.getters.creator,
       // 获取用户列表的参数对象
       queryInfo: {
         query: '',
@@ -288,6 +220,7 @@ export default {
       // percentage: 0,
       // 添加ADD对话框的显示和隐藏
       addDialogVisible: false,
+      findDialogVisible: false,
       // 添加book的表单数据对象
       addBookForm: {
         b_name: '',
@@ -327,11 +260,7 @@ export default {
       editBookForm: {},
       editBookFormRules: {},
       // 已选中的查询方式
-      selected: '',
-      // 查询到的图书信息
-      findBook: [],
-      // 查询对话框的显示和隐藏
-      findDialogVisible: false
+      selected: ''
     }
   },
   created() {
@@ -343,20 +272,35 @@ export default {
   methods: {
     // 获取图书列表
     async getBookList() {
-      const { data: res } = await this.$http.get(
+      if (this.curUser.role === 'manager' ||  this.creator.role === 'manager' || this.curUser.role === 'common') {
+        const { data: res } = await this.$http.get(
         `profiles/${this.curUser.role}/${this.curUser.id}`,
         {
           params: this.queryInfo
         }
-      )
-      // console.log(res)
-      if (res.meta.status !== 200) {
-        return this.$message.error('这里没啥内容@_@')
-      }
-      this.bookList = res.data
-      this.total = res.data.length
-      // console.log(this.bookList)
+        )
+        console.log(res)
+        if (res.meta.status !== 200) {
+          return this.$message.error('这里没啥内容@_@')
+        }
+        this.bookList = res.data
+        this.total = res.data.length
+        // console.log(this.bookList)
       // console.log(this.total)
+      } else if (this.creator.role === 'common') {
+        const { data: res } = await this.$http.get(
+        `profiles/${this.creator.role}/${this.creator.id}`,
+        {
+          params: this.queryInfo
+        }
+        )
+        console.log(res)
+        if (res.meta.status !== 200) {
+          return this.$message.error('这里没啥内容@_@')
+        }
+        this.bookList = res.data
+        this.total = res.data.length
+      }
     },
     // 查询图书列表
     async findBookList(selected) {
@@ -371,9 +315,8 @@ export default {
       if (res.meta.status !== 200) {
         return this.$message.error('没找到任何内容>_<')
       }
-      this.findBook = res.data
-      console.log(this.findBook)
-      this.findDialogVisible = true
+      this.bookList = res.data
+      // console.log(this.bookList)
     },
     // 表单关闭重置
     addDialogClosed() {
