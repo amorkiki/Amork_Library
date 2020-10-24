@@ -27,7 +27,8 @@
         </el-col>
       </el-row>
       <!-- 日记列表区域 -->
-      <el-table :data="notesInfo" style="width: 100%" border stripe>
+      <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.4)" :data="notesInfo" style="width: 100%" border stripe>
         <el-table-column type="index" width="35px"> </el-table-column>
         <el-table-column label="Creator" width="100px">{{
           curUser.name
@@ -98,6 +99,7 @@ export default {
   components: { amCrumbs },
   data() {
     return {
+      loading: false,
       curUser: this.$store.getters.curUser,
       // 读书笔记信息
       notesInfo: [],
@@ -118,11 +120,13 @@ export default {
   methods: {
     // 获取笔记列表
     async getNotesList() {
+      this.loading = true
       const res = await this.$http.get(
         `/diaries/${this.curUser.role}/${this.curUser.id} `
       )
       console.log(res.data)
       if (res.status !== 200) return this.$message.error('获取列表失败>_<')
+      this.loading = false
       this.notesInfo = res.data
       this.total = res.data.length
     },

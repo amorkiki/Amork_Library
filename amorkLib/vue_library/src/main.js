@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+
 import './plugins/element.js'
 // 导入全局样式表
 import '../src/assets/css/global.css'
@@ -28,8 +29,8 @@ axios.interceptors.request.use(config => {
   return config
 })
 // axios挂载到vue的原型对象上
-Vue.prototype.$http = axios
 Vue.use(axios)
+Vue.prototype.$http = axios
 
 // 富文本编辑引用
 Vue.use(VueQuillEditor /* { default global options } */)

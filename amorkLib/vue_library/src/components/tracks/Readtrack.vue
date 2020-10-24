@@ -7,7 +7,8 @@
     <!-- 卡片视图区 -->
     <el-card>
       <!-- 列表 -->
-      <el-table :data="bookList" border style="width: 100%">
+      <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.4)" :data="bookList" border style="width: 100%">
         <el-table-column type="index" width="40px" label="序列">
         </el-table-column>
         <el-table-column prop="type" label="Type" width="60px">
@@ -107,6 +108,7 @@
           :timestamp="readingSteps.dateAndTime"
           placement="top"
           icon="iconfont icon-arrow-up"
+          v-loading="loading"
         >
           <el-card>
             <h3>Update {{ readingSteps.b_name }}</h3>
@@ -131,6 +133,7 @@ export default {
   components: { amCrumbs },
   data() {
     return {
+      loading: false,
       curUser: this.$store.getters.curUser,
       bookList: [],
       // 点击修改页数是拿到的书的pages
@@ -155,6 +158,7 @@ export default {
   methods: {
     // 获取图书列表
     async getBookList() {
+      this.loading = true
       const { data: res } = await this.$http.get(
         `profiles/${this.curUser.role}/${this.curUser.id}`,
         {
@@ -163,8 +167,10 @@ export default {
       )
       // console.log(res)
       if (res.meta.status !== 200) {
+        this.loading = false
         return this.$message.error('这里没啥内容@_@')
       }
+      this.loading = false
       this.bookList = res.data
       this.total = res.data.length
       // console.log(this.bookList)
@@ -229,6 +235,7 @@ export default {
 
     // 显示阅读进度按钮
     async showRead(val) {
+      this.loading = true
       this.readDialogVisible = true
       // alert(val)书名
       const { data: res } = await this.$http.get(
@@ -236,15 +243,18 @@ export default {
       )
       console.log(res.data)
       if (res.data.length <= 0) {
+        this.loading = false
         this.$message.error('获取笔记列表失败>_<') 
         return 
       }
+      this.loading = false
       this.readingSteps = res.data
     },
 
     // 点击添加跳转到添加页面
     addNewNotes(scope) {
       console.log(scope)
+      this.loading = true
       // const { data: res } = await this.$http(`/profiles/find/1/${scope.b_name}`)
       // console.log(res.data)
       this.$store.dispatch('getCurBook', scope)

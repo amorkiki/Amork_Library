@@ -30,7 +30,7 @@
         </el-form-item>
         <!-- 按钮 -->
         <el-form-item class="login_btns">
-          <el-button type="primary" @click="login">login</el-button>
+          <el-button type="primary" @click="login"  v-loading="loading">login</el-button>
           <el-button type="info" @click="loginFormRef">reset</el-button>
         </el-form-item>
       </el-form>
@@ -59,7 +59,9 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 6, max: 15, message: '长度范围在6~15个字符', trigger: 'blur' }
         ]
-      }
+      },
+      // v-loading
+      loading: false
     }
   },
   methods: {
@@ -71,18 +73,22 @@ export default {
       this.$refs.loginFormRef.validate(async valid => {
         // console.log(valid)
         if (!valid) return
+        this.loading = true
         const { data: res } = await this.$http.post(
           'users/login',
           this.loginForm
         )
         // console.log(typeof res.data)
         if (!res.data) {
+          this.loading = false
           this.$message.error('请输入正确的用户名记密码')
           return
         }
         if (res.meta.status !== 200) {
+          this.loading = false
           return this.$message.error('哎呀>_<没有登录成功')
         } else {
+          this.loading = false
           this.$message.success('成功登录喽~^_^~')
           // console.log(res)
           window.sessionStorage.setItem('token', res.meta.token)

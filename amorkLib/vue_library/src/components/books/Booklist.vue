@@ -34,7 +34,8 @@
         </el-col>
       </el-row>
       <!-- 图书列表区域 -->
-      <el-table :data="bookList" border style="width: 100%">
+      <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.4)" :data="bookList" border style="width: 100%">
         <el-table-column type="index" width="30px"> </el-table-column>
         <el-table-column prop="type" label="Type" width="60px">
         </el-table-column>
@@ -203,6 +204,7 @@ export default {
   components: { amCrumbs },
   data() {
     return {
+      loading: false,
       // 获取当前用户信息
       curUser: this.$store.getters.curUser,
       // 创建者信息
@@ -272,6 +274,7 @@ export default {
   methods: {
     // 获取图书列表
     async getBookList() {
+      this.loading = true
       if (this.curUser.role === 'manager' ||  this.creator.role === 'manager' || this.curUser.role === 'common') {
         const { data: res } = await this.$http.get(
         `profiles/${this.curUser.role}/${this.curUser.id}`,
@@ -283,6 +286,7 @@ export default {
         if (res.meta.status !== 200) {
           return this.$message.error('这里没啥内容@_@')
         }
+        this.loading = false
         this.bookList = res.data
         this.total = res.data.length
         // console.log(this.bookList)
@@ -296,8 +300,10 @@ export default {
         )
         console.log(res)
         if (res.meta.status !== 200) {
+          this.loading = false
           return this.$message.error('这里没啥内容@_@')
         }
+        this.loading = false
         this.bookList = res.data
         this.total = res.data.length
       }
@@ -308,13 +314,16 @@ export default {
       if (!this.queryInfo.query) {
         return this.$message.error('请输入要查找的内容')
       }
+      this.loading = true
       const { data: res } = await this.$http.get(
         `profiles/find/${selected}/${this.queryInfo.query}`
       )
       // console.log(res)
       if (res.meta.status !== 200) {
+        this.loading = false
         return this.$message.error('没找到任何内容>_<')
       }
+      this.loading = false
       this.bookList = res.data
       // console.log(this.bookList)
     },

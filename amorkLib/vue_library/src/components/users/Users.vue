@@ -33,6 +33,7 @@
               slot="append"
               icon="el-icon-search"
               @click="findUserList(selected)"
+              v-loading="loading"
             ></el-button>
           </el-input>
         </el-col>
@@ -43,7 +44,8 @@
         </el-col>
       </el-row>
       <!-- 用户列表区域 -->
-      <el-table :data="userlist" :row-class-name="tableRowClassName">
+      <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.7)" :data="userlist" :row-class-name="tableRowClassName">
         <el-table-column type="index"> </el-table-column>
         <el-table-column prop="name" label="NAME"> </el-table-column>
         <el-table-column prop="email" label="EMAIL"> </el-table-column>
@@ -240,6 +242,7 @@ export default {
       }
     }
     return {
+      loading: false,
       // 当前用户信息
       curUser: this.$store.getters.curUser,
       // 创建者信息
@@ -335,13 +338,16 @@ export default {
   methods: {
     // 获取用户列表
     async getUserList() {
+      this.loading = true
       const { data: res } = await this.$http.get(
         `users/list/${this.curUser.role}/${this.curUser.id}`
       )
       // console.log(res)
       if (res.meta.status !== 200) {
+        this.loading = false
         return this.$message.error('没拿到任何信息呀 >_<')
       }
+      this.loading = false
       this.userlist = res.data
       this.total = res.length
       // console.log(this.userlist)
@@ -352,10 +358,12 @@ export default {
       if (!this.queryInfo.query) {
         return this.$message.error('请输入要查找的内容')
       }
+      this.loading = true
       const { data: res } = await this.$http.get(
         `users/find/${selected}/${this.queryInfo.query}`
       )
       console.log(res)
+      this.loading = false
       if (res.meta.status !== 200) {
         return this.$message.error('没找到任何内容>_<')
       }

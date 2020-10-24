@@ -40,7 +40,8 @@ import {
   Image,
   InputNumber,
   Timeline,
-  TimelineItem
+  TimelineItem,
+  Loading
 } from 'element-ui'
 
 Vue.use(Button)
@@ -83,5 +84,6 @@ Vue.use(Image)
 Vue.use(InputNumber)
 Vue.use(Timeline)
 Vue.use(TimelineItem)
+Vue.use(Loading.directive)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
