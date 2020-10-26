@@ -34,72 +34,7 @@
         </el-col>
       </el-row>
       <!-- 图书列表区域 -->
-      <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.4)" :data="bookList" border style="width: 100%">
-        <el-table-column type="index" width="30px"> </el-table-column>
-        <el-table-column prop="type" label="Type" width="60px">
-        </el-table-column>
-        <el-table-column prop="b_name" label="Name"> </el-table-column>
-        <el-table-column prop="author" label="Author"> </el-table-column>
-        <el-table-column prop="publish" label="Publish"> </el-table-column>
-        <el-table-column prop="isbn_num" label="ISBN" width="180px">
-        </el-table-column>
-        <el-table-column prop="pages" label="PAGES" width="80px">
-        </el-table-column>
-        <!-- 备注栏 -->
-        <el-table-column label="Remark" width="85px"></el-table-column>
-        <!-- 操作栏 -->
-        <el-table-column label="Control">
-          <template slot-scope="scope">
-            <el-tooltip
-              effect="dark"
-              content="edit"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button type="text" @click="showEditDialog(scope.row._id)">
-                <i
-                  class="iconfont icon-customization"
-                  style="color: #91ca8d"
-                ></i>
-              </el-button>
-            </el-tooltip>
-            <el-tooltip
-              effect="dark"
-              content="delete"
-              placement="top"
-              :enterable="false"
-              ><el-button type="text" @click="removeBookById(scope.row._id)">
-                <i
-                  class="iconfont icon-ashbin"
-                  style="color: #ea7e53"
-                ></i> </el-button
-            ></el-tooltip>
-            <el-tooltip
-              effect="dark"
-              content="skip to readingnotes"
-              placement="top"
-              :enterable="false"
-              ><el-button type="text">
-                <i
-                  class="iconfont icon-attachment"
-                  style="color: #7288ac"
-                ></i> </el-button
-            ></el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- 分页区域 -->
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="queryInfo.pagenum"
-        :page-sizes="[3, 5, 10, 15]"
-        :page-size="queryInfo.pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      >
-      </el-pagination>
+      <am-table :loading="loading" :tableData="bookList" :total="total" @edit="showEditDialog" @remove="removeBookById"></am-table>
     </el-card>
     <!-- 添加区域弹出的对话框 -->
     <el-dialog
@@ -192,16 +127,16 @@
       <el-button type="info" @click="editDialogVisible = false"> no </el-button>
       <el-button type="warning" @click="editBookInfo()"> yes </el-button>
     </el-dialog>
-    <!-- 查询图书信息弹出的对话框 -->
   </div>
 </template>
 <script>
-import amCrumbs from '../cmps/breadCrumb'
+import amCrumbs from '../../components/cmps/breadCrumb'
+import amTable from '../../components/books/Books-table'
 // import amSearch from '../cmps/searchInput'
 import { mapState } from 'vuex'
 
 export default {
-  components: { amCrumbs },
+  components: { amCrumbs, amTable },
   data() {
     return {
       loading: false,
@@ -213,7 +148,7 @@ export default {
       queryInfo: {
         query: '',
         pagenum: 1,
-        pagesize: 10
+        pagesize: 5
       },
       // 保存服务器返回的图书列表
       bookList: [],
@@ -282,7 +217,7 @@ export default {
           params: this.queryInfo
         }
         )
-        console.log(res)
+        console.log(res.data)
         if (res.meta.status !== 200) {
           return this.$message.error('这里没啥内容@_@')
         }
@@ -290,8 +225,9 @@ export default {
         this.bookList = res.data
         this.total = res.data.length
         // console.log(this.bookList)
-      // console.log(this.total)
-      } else if (this.creator.role === 'common') {
+        // console.log(this.total)
+      } 
+      if (this.creator.role === 'common') {
         const { data: res } = await this.$http.get(
         `profiles/${this.creator.role}/${this.creator.id}`,
         {
@@ -299,11 +235,10 @@ export default {
         }
         )
         console.log(res)
+        this.loading = false
         if (res.meta.status !== 200) {
-          this.loading = false
           return this.$message.error('这里没啥内容@_@')
         }
-        this.loading = false
         this.bookList = res.data
         this.total = res.data.length
       }
@@ -415,19 +350,8 @@ export default {
         this.$message.success('成功删除@_@')
         this.getBookList()
       }
-    },
-    // 监听 pagesize 改变 的事件
-    handleSizeChange(newsize) {
-      console.log(newsize)
-      this.queryInfo.pagesize = newsize
-      this.getBookList()
-    },
-    // 监听 页码值 改变 的事件
-    handleCurrentChange(newpage) {
-      console.log(newpage)
-      this.queryInfo.pagenum = newpage
-      this.getBookList()
     }
+    
   }
 }
 </script>

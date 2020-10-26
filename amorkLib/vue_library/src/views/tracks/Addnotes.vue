@@ -243,7 +243,7 @@ export default {
       // alert(this.curUser.id)
       // alert(this.curBook.b_name)
       const { data: res } = await this.$http.post(
-        `/diaries/add/${this.curUser.id}/${this.curBook.b_name}`,
+        `/diaries/add/${this.curUser.id}/${this.curBook.b_name}/${this.curUser.name}`,
         this.notesInfo
       )
       console.log(res)

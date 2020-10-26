@@ -3,16 +3,7 @@
     <!-- 面包屑导航 -->
     {{curUser}}-------
     {{creator}}
-    <el-breadcrumb
-      separator-class="el-icon-arrow-right"
-      active-text-color="#a38eaa"
-    >
-      <el-breadcrumb-item :to="{ path: '/home' }" active-text-color="#a38eaa"
-        >home</el-breadcrumb-item
-      >
-      <el-breadcrumb-item>users</el-breadcrumb-item>
-      <el-breadcrumb-item>userlist</el-breadcrumb-item>
-    </el-breadcrumb>
+    <am-crumbs pre="users" cur="userlist"></am-crumbs>
     <!-- 卡片视图区域 -->
     <el-card class="box-card">
       <!-- 搜索&添加区域 -->
@@ -38,77 +29,13 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="info" @click="addDialogVisible = true"
+          <el-button type="info" @click="addDialogVisible=true"
             >ADD</el-button
           >
         </el-col>
       </el-row>
       <!-- 用户列表区域 -->
-      <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.7)" :data="userlist" :row-class-name="tableRowClassName">
-        <el-table-column type="index"> </el-table-column>
-        <el-table-column prop="name" label="NAME"> </el-table-column>
-        <el-table-column prop="email" label="EMAIL"> </el-table-column>
-        <el-table-column prop="identity" label="IDENTITY"> </el-table-column>
-        <!-- 状态栏 -->
-        <el-table-column label="STATUS">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.situation"
-              @change="changeSwitch(scope.row)"
-            ></el-switch>
-          </template>
-        </el-table-column>
-        <!-- 操作栏 -->
-        <el-table-column label="CONTROL">
-          <template slot-scope="scope">
-            <el-tooltip
-              effect="dark"
-              content="edit"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button type="text" @click="showEditDialog(scope.row._id)">
-                <i class="iconfont icon-editor" style="color: #91ca8d"></i>
-              </el-button>
-            </el-tooltip>
-            <el-tooltip
-              effect="dark"
-              content="delete"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button type="text" @click="removeUserById(scope.row._id)">
-                <i
-                  class="iconfont icon-ashbin"
-                  style="color: #ea7e53"
-                ></i> </el-button
-            ></el-tooltip>
-            <el-tooltip
-              effect="dark"
-              content="skip to booklist"
-              placement="top"
-              :enterable="false"
-              ><el-button type="text" @click="skipToList(scope.row,curUser)">
-                <i
-                  class="iconfont icon-Moneymanagement"
-                  style="color: #7288ac"
-                ></i> </el-button
-            ></el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- 分页区域 -->
-      <!-- <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="1"
-        :page-sizes="[1, 5, 10]"
-        :page-size="queryInfo.pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      >
-      </el-pagination> -->
+      <am-table :loading="loading" :tableData="userlist" :total="total" @switch="changeSwitch" @edit="showEditDialog" @remove="removeUserById" @skip='skipToList'></am-table>
     </el-card>
     <!-- 添加区域弹出的对话框 -->
     <el-dialog
@@ -167,70 +94,15 @@
       <el-button type="info" @click="editDialogVisible = false"> no </el-button>
       <el-button type="warning" @click="editUserInfo()"> yes </el-button>
     </el-dialog>
-    <!-- 查询信息弹出的对话框 -->
-    <el-dialog
-      title="Find Users +_+!"
-      :visible.sync="findDialogVisible"
-      width="90%"
-    >
-      <el-table :data="findUser">
-        <el-table-column type="index"> </el-table-column>
-        <el-table-column prop="name" label="NAME"> </el-table-column>
-        <el-table-column prop="email" label="EMAIL"> </el-table-column>
-        <el-table-column prop="identity" label="IDENTITY"> </el-table-column>
-        <!-- 状态栏 -->
-        <el-table-column label="STATUS">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.situation"
-              @change="changeSwitch(scope.row)"
-            ></el-switch>
-          </template>
-        </el-table-column>
-        <!-- 操作栏 -->
-        <el-table-column label="CONTROL">
-          <template slot-scope="scope">
-            <el-tooltip
-              effect="dark"
-              content="edit"
-              place
-              ment="top"
-              :enterable="false"
-            >
-              <el-button type="text" @click="showEditDialog(scope.row._id)">
-                <i class="iconfont icon-editor" style="color: #91ca8d"></i
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip
-              effect="dark"
-              content="delete"
-              placement="top"
-              :enterable="false"
-              ><el-button type="text" @click="removeUserById(scope.row._id)"
-                ><i
-                  class="iconfont icon-ashbin"
-                  style="color: #ea7e53"
-                ></i></el-button
-            ></el-tooltip>
-            <el-tooltip
-              effect="light"
-              content="skip to booklist"
-              placement="top"
-              :enterable="false"
-              ><el-button type="text" >
-                <i
-                  class="iconfont icon-Moneymanagement"
-                  style="color: #7288ac"
-                ></i> </el-button
-            ></el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-dialog>
+
   </div>
 </template>
 <script>
+import amCrumbs from '../../components/cmps/breadCrumb'
+import amTable from '../../components/users/User-table'
+// import amAddForm from '../../components/users/User-add'
 export default {
+  components: { amCrumbs, amTable },
   data() {
     // 验证邮箱的规则
     var checkEmail = (rule, value, callback) => {
@@ -241,31 +113,21 @@ export default {
         callback(new Error('not a email'))
       }
     }
+    
     return {
       loading: false,
-      // 当前用户信息
+      // 当前用户信息、 创建者信息
       curUser: this.$store.getters.curUser,
-      // 创建者信息
       creator: this.$store.getters.creator,
       // 获取用户列表的参数对象
       queryInfo: {
-        query: '',
-        pagesize: 10,
-        pagenum: 1
+        query: ''
       },
       // 保存请求回来的用户列表数据
       userlist: [],
       total: 0,
       // 控制添加按钮的对话框的显示和隐藏
       addDialogVisible: false,
-      // 添加用户的表单数据对象
-      addForm: {
-        name: '',
-        password: '',
-        email: '',
-        identity: '',
-        situation: ''
-      },
       // 添加用户的表单验证规则对象
       addFormRules: {
         name: [
@@ -298,6 +160,15 @@ export default {
           }
         ]
       },
+      
+      // 添加用户的表单数据对象
+      addForm: {
+        name: '',
+        password: '',
+        email: '',
+        identity: '',
+        situation: ''
+      },
       // 控制编辑按钮的对话框的显示和隐藏
       editDialogVisible: false,
       // 编辑用户的表单数据对象
@@ -322,11 +193,7 @@ export default {
         ]
       },
       // 已选中的查询方式
-      selected: '',
-      // 查询到的用户信息
-      findUser: [],
-      // 查询对话框的显示和隐藏
-      findDialogVisible: false
+      selected: ''
     }
   },
   created() {
@@ -342,16 +209,14 @@ export default {
       const { data: res } = await this.$http.get(
         `users/list/${this.curUser.role}/${this.curUser.id}`
       )
-      // console.log(res)
+      console.log(res)
       if (res.meta.status !== 200) {
         this.loading = false
         return this.$message.error('没拿到任何信息呀 >_<')
       }
       this.loading = false
       this.userlist = res.data
-      this.total = res.length
-      // console.log(this.userlist)
-      // console.log(this.total)
+      this.total = res.data.length
     },
     // 查询用户列表
     async findUserList(selected) {
@@ -362,24 +227,12 @@ export default {
       const { data: res } = await this.$http.get(
         `users/find/${selected}/${this.queryInfo.query}`
       )
-      console.log(res)
+      // console.log(res)
       this.loading = false
       if (res.meta.status !== 200) {
         return this.$message.error('没找到任何内容>_<')
       }
-      this.findUser = res.data
-      console.log(this.findUser)
-      this.findDialogVisible = true
-    },
-    // 表格状态颜色
-    tableRowClassName({ row }) {
-      // console.log(row.situation)
-      if (row.situation === true) {
-        return 'success-row'
-      } else if (row.situation === false) {
-        return 'warning-row'
-      }
-      return ''
+      this.userlist = res.data
     },
     // 切换situation状态栏
     async changeSwitch(switchInfo) {
@@ -399,10 +252,11 @@ export default {
       this.$refs.addFormRef.resetFields()
     },
     // 点击按钮，添加新用户
-    addUser() {
+    addUser(ev) {
+      alert(ev)
       // 添加用户之前预验证
       this.$refs.addFormRef.validate(async valid => {
-        // console.log(valid)
+        console.log(valid)
         if (!valid) {
           return this.$message.error('please finish this add user form')
         }
@@ -502,6 +356,7 @@ export default {
         this.$router.push('/booklist')
       }
     }
+
   }
 }
 </script>

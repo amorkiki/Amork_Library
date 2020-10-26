@@ -127,6 +127,9 @@ export default new Vuex.Store({
     setCurBook (state, data) {
       state.curBook.b_name = data.b_name
       state.curBook._id = data._id
+    },
+    forCate (state, data) {
+      // 循环得到上级标签
     }
   },
   actions: {
@@ -139,6 +142,9 @@ export default new Vuex.Store({
     },
     getCurBook ({ commit }, data) {
       commit('setCurBook', data)
+    },
+    getPreCate ({ commit }, bookCateList) {
+      commit('forCate', bookCateList)
     }
   },
   getters: {
@@ -155,6 +161,9 @@ export default new Vuex.Store({
     },
     curBook (state) {
       return state.curBook
+    },
+    totalCate (state) {
+      return state.bookCateList
     }
   }
 })

@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import amCrumbs from '../cmps/breadCrumb'
+import amCrumbs from '../../components/cmps/breadCrumb'
 export default {
   components: { amCrumbs }
 }

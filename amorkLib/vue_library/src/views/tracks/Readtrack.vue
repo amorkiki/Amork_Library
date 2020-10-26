@@ -7,71 +7,7 @@
     <!-- 卡片视图区 -->
     <el-card>
       <!-- 列表 -->
-      <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.4)" :data="bookList" border style="width: 100%">
-        <el-table-column type="index" width="40px" label="序列">
-        </el-table-column>
-        <el-table-column prop="type" label="Type" width="60px">
-        </el-table-column>
-        <el-table-column prop="b_name" label="Name"> </el-table-column>
-        <el-table-column prop=" pages" label="Total Pages" width="120px">
-          <template slot-scope="scope">
-            <!-- 总页数标签 -->
-            <el-tag type="info" size="medium">
-              {{ scope.row.pages }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <!-- 进度条栏 -->
-        <el-table-column label="Progress">
-          <template slot-scope="scope">
-            <el-progress
-              :percentage="scope.row.progress"
-              :color="customColorMethod"
-              :stroke-width="12"
-              text-inside
-            ></el-progress>
-          </template>
-        </el-table-column>
-        <!-- 明细栏 -->
-        <el-table-column label="Show Details" width="220px">
-          <template slot-scope="scope">
-            <el-tooltip
-              effect="light"
-              content="update current prgress"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button type="text" @click="changeCur(scope.row._id)"
-                ><i
-                  class="iconfont icon-exchangerate"
-                  style="color: #91ca8d; font-size: 25px"
-                ></i>
-              </el-button>
-            </el-tooltip>
-            <el-tooltip
-              effect="light"
-              content="add new logs"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button type="text" @click="addNewNotes(scope.row)"
-                ><i class="iconfont icon-writing" style="color: #7288ac"></i
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip
-              effect="light"
-              content="show logs"
-              placement="top"
-              :enterable="false"
-            >
-              <el-button type="text" @click="showRead(scope.row.b_name)"
-                ><i class="iconfont icon-contacts" style="color: #ea7e53"></i
-              ></el-button>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
+    <am-table :tableData="bookList" :loading="loading" :total="total" @add="addNewNotes" @show="showRead" @change="changeCur" :color='customColorMethod'></am-table>
     </el-card>
     <!-- 更改当前页弹出框 -->
     <el-dialog
@@ -128,14 +64,16 @@
   </div>
 </template>
 <script>
-import amCrumbs from '../cmps/breadCrumb'
+import amCrumbs from '../../components/cmps/breadCrumb'
+import amTable from '../../components/tracks/Track-table'
 export default {
-  components: { amCrumbs },
+  components: { amCrumbs, amTable },
   data() {
     return {
       loading: false,
       curUser: this.$store.getters.curUser,
       bookList: [],
+      total: 0,
       // 点击修改页数是拿到的书的pages
       current_pages: 0,
       // current page 拿到的值
@@ -243,6 +181,7 @@ export default {
       )
       console.log(res.data)
       if (res.data.length <= 0) {
+        this.readingSteps = []
         this.loading = false
         this.$message.error('获取笔记列表失败>_<') 
         return 
