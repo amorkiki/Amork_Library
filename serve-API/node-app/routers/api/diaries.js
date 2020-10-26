@@ -15,12 +15,13 @@ const Diaries = require("../../models/Diaries");
 // @desc  添加笔记
 // @access private
 router.post(
-  "/add/:id/:bname",
+  "/add/:id/:bname/:uname",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const diariesFields = new Diaries();
     diariesFields.creator_id = req.params.id;
     diariesFields.b_name = req.params.bname;
+    diariesFields.creator_name = req.params.uname;
     if (req.body.dateAndTime) diariesFields.dateAndTime = req.body.dateAndTime;
     if (req.body.radioWeather)
       diariesFields.radioWeather = req.body.radioWeather;

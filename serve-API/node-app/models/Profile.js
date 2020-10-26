@@ -7,7 +7,7 @@ const ProfileSchema = new Schema({
     type: String,
   },
   type: {
-    type: Array,
+    type: String,
   },
   b_name: {
     type: String,

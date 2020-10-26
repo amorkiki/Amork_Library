@@ -5,9 +5,15 @@ const Schema = mongoose.Schema;
 const DiariesSchema = new Schema({
   creator_id: {
     type: String,
+    required: true
+  },
+  creator_name: {
+    type: String,
+    required: true
   },
   dateAndTime: {
     type: String,
+    required: true,
   },
   radioWeather: {
     type: String,
