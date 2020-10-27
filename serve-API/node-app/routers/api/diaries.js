@@ -40,6 +40,33 @@ router.post(
   }
 );
 
+// $route POST api/diaries/edit/书名
+// @desc  修改笔记
+// @access private
+router.put('/edit/:id',
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => { 
+    const diariesFields = {};
+    if(req.body.b_chapters) diariesFields.b_chapters=req.body.b_chapters
+    if(req.body.intro) diariesFields.intro=req.body.intro
+    if (req.body.content) diariesFields.content = req.body.content
+    
+    Diaries.findOneAndUpdate(
+      {_id: req.params.id},
+      { $set: diariesFields },
+      { returnOriginal: false }
+    ).then((diariesFields) => {
+        res.json({
+          data: diariesFields,
+          meta: {
+            success: true,
+            status: 200,
+          },
+        });
+      })
+      .catch((err) => err);
+})
+
 // $route GET api/diaries/
 // @desc 获取所有笔记
 // @access private
