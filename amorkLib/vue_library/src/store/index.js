@@ -127,9 +127,6 @@ export default new Vuex.Store({
     setCurBook (state, data) {
       state.curBook.b_name = data.b_name
       state.curBook._id = data._id
-    },
-    forCate (state, data) {
-      // 循环得到上级标签
     }
   },
   actions: {

@@ -1,8 +1,8 @@
 <template>
   <el-row>
     <!-- 用户列表区域 -->
-    <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.7)" :data="tableData.slice((pagenum-1)*pagesize,pagenum*pagesize)" :row-class-name="tableRowClassName">
+    <el-table v-loading="loading" element-loading-text="努力加载中... >_<!!" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.2)" :data="tableData.slice((pagenum-1)*pagesize,pagenum*pagesize)" :row-class-name="tableRowClassName">
         <el-table-column type="index"> </el-table-column>
         <el-table-column prop="name" label="NAME"> </el-table-column>
         <el-table-column prop="email" label="EMAIL"> </el-table-column>

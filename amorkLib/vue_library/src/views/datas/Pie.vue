@@ -25,14 +25,14 @@ export default {
       // 每个type出现的次数
       pieCate: [],
       // 共有那些type
-      cateName: []
+      cateName: [],
+      // 饼图数据
+      pieData: []
     }
   },
   methods: {
     async getPieCate() {
       var arr = []
-      var obj1 = {}
-      var arr3 = []
       if (this.curUser.role === 'manager' ||  this.creator.role === 'manager' || this.curUser.role === 'common') {
         const { data: res } = await this.$http.get(
         `profiles/${this.curUser.role}/${this.curUser.id}`)  
@@ -58,8 +58,8 @@ export default {
           }
         }
       })
-      console.log(arr)
-      // 每个type出现的次数 {'前端':8,'考试':1, ...}
+      // console.log(arr)  // ["前端", "前端", "前端", "前端", "前端", "前端", "建筑", "小说", "前端", "前端", "外文", "考试", "心理学", "经济", "报刊评论", "宗教", "书画", "外文"]
+      // 每个type出现的次数 
       this.pieCate = arr.reduce((obj, name) => {
         if (name in obj) {
           obj[name]++
@@ -68,102 +68,85 @@ export default {
         }
         return obj
       }, {})
-      console.log(this.pieCate)
-      // type组成的数组['前端', '物理', '小说', '考试', '外文']
+      console.log(this.pieCate) // {'前端':8,'考试':1, ...}
+      // type组成的数组
       for (const key in this.pieCate) {
-        this.cateName.push(key) 
+        this.cateName.push(key)
       }
-      console.log(this.cateName)
+      this.cateName = this.cateName.sort()
+      console.log(this.cateName)// ['前端', '物理', '小说', '考试', '外文']
       // 循环得出type的name和次数value
       for (let i = 0; i < this.cateName.length; i++) {
-        obj1.name = this.cateName[i]
-        console.log(obj1)
-        arr3[i] = obj1
-        console.log(arr3)
+        this.pieData.push({ 
+          name: this.cateName[i],
+          value: this.pieCate[this.cateName[i]]
+        })
       }
-    }
-  },
-  created() {
-    this.getPieCate()
-  },
-  mounted() {
-    ;(function() {
+    },
+    // 渲染饼图
+    async getPieData() {
       var pieChart = echarts.init(document.getElementById('pie'))
+      pieChart.showLoading({
+        text: '客官莫慌 >_< 数据正在努力加载中...',
+        color: '#73BABC',
+        textColor: '#73BABC',
+        spinnerRadius: 10,
+        lineWidth: 3
+      })
+      await this.getPieCate()
       pieChart.setOption({
+        title: {
+          text: '图书类型统计',
+          subtext: '涉及领域',
+          left: 'center'
+        },
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
         legend: {
           orient: 'vertical',
-          left: 10,
-          data: ['前端', '物理', '小说', '考试', '外文']
+          left: 'left',
+          data: this.cateName
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            magicType: {
+              show: true,
+              type: ['pie', 'funnel']
+            },
+            restore: { show: true },
+            saveAsImage: { show: true }
+          }
         },
         series: [
           {
             name: '涉及领域',
             type: 'pie',
-            selectedMode: 'single',
-            radius: [0, '30%'],
-            label: {
-              position: 'inner'
-            },
-            labelLine: {
-              show: false
-            },
-            data: [
-              { value: 8, name: '理工', selected: true },
-              { value: 1, name: '文艺' },
-              { value: 1, name: '考试' },
-              { value: 2, name: '外文' }
-            ]
-          },
-          {
-            name: '涉及领域',
-            type: 'pie',
-            radius: ['40%', '55%'],
-            label: {
-              formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
-              backgroundColor: '#eee',
-              borderColor: '#aaa',
-              borderWidth: 1,
-              borderRadius: 4,
-              rich: {
-                a: {
-                  color: '#999',
-                  lineHeight: 22,
-                  align: 'center'
-                },
-                hr: {
-                  borderColor: '#aaa',
-                  width: '100%',
-                  borderWidth: 0.5,
-                  height: 0
-                },
-                b: {
-                  fontSize: 16,
-                  lineHeight: 33
-                },
-                per: {
-                  color: '#eee',
-                  backgroundColor: '#334455',
-                  padding: [2, 4],
-                  borderRadius: 2
-                }
+            radius: '55%',
+            center: ['50%', '60%'],
+            data: this.pieData,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
               }
-            },
-            data: [
-              { value: 6, name: '前端' },
-              { value: 2, name: '物理' },
-              { value: 1, name: '小说' },
-              { value: 1, name: '考试' },
-              { value: 2, name: '外文' }
-                
-            ]
+            }
           }
         ]
       })
-    })()
+      pieChart.hideLoading()
+    }
+  },
+  created() {
+    // this.getPieCate()
+  },
+  mounted() {
+    this.getPieData()
   }
 }
 </script>

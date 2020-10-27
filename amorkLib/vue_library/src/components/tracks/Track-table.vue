@@ -1,7 +1,7 @@
 <template>
   <div>      
-    <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.4)" :data="tableData.slice((pagenum-1)*pagesize,pagenum*pagesize)" border style="width: 100%">
+    <el-table v-loading="loading" element-loading-text="正在努力加载中... >_<!!" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.2)" :data="tableData.slice((pagenum-1)*pagesize,pagenum*pagesize)" border style="width: 100%">
         <el-table-column type="index" width="40px" label="序列">
         </el-table-column>
         <el-table-column prop="type" label="Type" width="60px">

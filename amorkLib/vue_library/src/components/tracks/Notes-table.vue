@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.4)" :data="tableData.slice((pagenum-1)*pagesize,pagenum*pagesize)" style="width: 100%" border stripe>
+    <el-table v-loading="loading" element-loading-text="正在努力加载中... >_<!!" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.2)" :data="tableData.slice((pagenum-1)*pagesize,pagenum*pagesize)" style="width: 100%" border stripe>
         <el-table-column type="index" width="35px"> </el-table-column>
         <el-table-column label="Creator" width="100px" prop="creator_name"></el-table-column>
         <el-table-column
@@ -32,7 +32,7 @@
               :enterable="false"
             >
               <el-button type="text">
-                <i class="iconfont icon-unlock" style="color: #91ca8d"></i>
+                <i class="iconfont icon-unlock" style="color: #91ca8d" @click="$emit('edit',scope.row)"></i>
               </el-button>
             </el-tooltip>
             <el-tooltip

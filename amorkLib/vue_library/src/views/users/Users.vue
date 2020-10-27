@@ -133,9 +133,9 @@ export default {
         name: [
           { required: true, message: 'please enter your name ^_^' },
           {
-            min: 3,
+            min: 1,
             max: 10,
-            message: 'your name must be 3~10 length ',
+            message: 'your name must be 1~10 length ',
             trigger: 'blur'
           }
         ],
@@ -178,9 +178,9 @@ export default {
         name: [
           { required: true, message: 'please enter your name ^_^' },
           {
-            min: 3,
+            min: 1,
             max: 10,
-            message: 'your name must be 3~10 length ',
+            message: 'your name must be 1~10 length ',
             trigger: 'blur'
           }
         ],

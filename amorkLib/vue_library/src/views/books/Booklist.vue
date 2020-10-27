@@ -34,7 +34,7 @@
         </el-col>
       </el-row>
       <!-- 图书列表区域 -->
-      <am-table :loading="loading" :tableData="bookList" :total="total" @edit="showEditDialog" @remove="removeBookById"></am-table>
+      <am-table :loading="loading" :tableData="bookList" :total="total" @edit="showEditDialog" @remove="removeBookById" @skip="skipToNotes"></am-table>
     </el-card>
     <!-- 添加区域弹出的对话框 -->
     <el-dialog
@@ -144,6 +144,7 @@ export default {
       curUser: this.$store.getters.curUser,
       // 创建者信息
       creator: this.$store.getters.creator,
+      curBook: this.$store.getters.curBook,
       // 获取用户列表的参数对象
       queryInfo: {
         query: '',
@@ -350,6 +351,18 @@ export default {
         this.$message.success('成功删除@_@')
         this.getBookList()
       }
+    },
+    // 跳转到对应图书的notes页面
+    async skipToNotes(name) {
+      // console.log(name)
+      const { data: res } = await this.$http.get(`/diaries/find/1/${name}`)
+      // console.log(res)
+      if (res.data.length <= 0) {
+        this.$message.error('该书目下还没添加任何笔记呀')
+        return
+      }
+      this.curBook.b_name = name
+      this.$router.push('/readingnotes')
     }
     
   }

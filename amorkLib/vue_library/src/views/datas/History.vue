@@ -105,18 +105,34 @@ export default {
     },
     // 绘制historyline图
     async getHisLine() {
+      var lineChart = echarts.init(document.getElementById('line'))
+      lineChart.showLoading({
+        text: '客官莫慌 >_< 数据正在努力加载中...',
+        color: '#73BABC',
+        textColor: '#73BABC',
+        spinnerRadius: 10,
+        lineWidth: 3
+      })
       // 等待拿到数据后再进行渲染
       await this.getHisCate()
-      var lineChart = echarts.init(document.getElementById('line'))
       var colorArr = ['#759AA0', '#E79D86', '#8DC1A9', '#EA7E53', '#EFDE79', '#73A272', '#73BABC', '#7288AC', '#91CA8D', '#F4A042']
+      
       lineChart.setOption({
         title: {
           text: '阅读横向涉猎',
           subtext: 'Reading confers to different kinds'
         },
         toolbox: {
+          show: true,
           feature: {
-            saveAsImage: {}
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            magicType: {
+              show: true,
+              type: ['pie', 'funnel']
+            },
+            restore: { show: true },
+            saveAsImage: { show: true }
           }
         },
         tooltip: {
@@ -190,13 +206,14 @@ export default {
           }
         ]
       })
+      lineChart.hideLoading()
     },
     // calendar日志信息
     async getCalenDate() {
       const res = await this.$http.get(
         `/diaries/${this.curUser.role}/${this.curUser.id} `
       )
-      console.log(res.data)
+      // console.log(res.data)
       if (res.status !== 200) return this.$message.error('获取列表失败>_<')
       Array.from(res.data).forEach(ele => {
         for (const val in ele) {
@@ -226,15 +243,12 @@ export default {
           count = 0
           for (var i = 0; i < log.length; i++) {
             if (echarts.format.formatTime('yyyy-MM-dd', time) === log[i]) {
-              console.log(log[i])
-              console.log('ok')
+              // console.log(log[i])
               count++
-              console.log(count)
+              // console.log(count)
             } else if (echarts.format.formatTime('yyyy-MM-dd', time) !== log[i]) {
-              console.log('no')
             }
           }
-          console.log(count)
           data.push([echarts.format.formatTime('yyyy-MM-dd', time), count])
         }
         console.log(data)
@@ -246,7 +260,12 @@ export default {
           left: 'center',
           text: myyear + ' 年 日志年历'
         },
-        tooltip: {},
+        toolbox: {
+          show: true,
+          feature: {
+            saveAsImage: { show: true }
+          }
+        },
         visualMap: {
           inRange: {
             color: ['#F2F4F6', '#EFDE79', '#73BABC', '#7288AC', '#91CA8D', '#F4A042']

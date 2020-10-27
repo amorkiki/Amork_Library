@@ -1,7 +1,7 @@
 <template>
   <div>
-      <el-table v-loading="loading" element-loading-text="努力加载中 >_<!!" element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.4)" :data="tableData.slice((pagenum-1)*pagesize,pagenum*pagesize)" border style="width: 100%">
+      <el-table v-loading="loading" element-loading-text="努力加载中... >_<!!" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.2)" :data="tableData.slice((pagenum-1)*pagesize,pagenum*pagesize)" border stripe style="width: 100%">
         <el-table-column type="index" width="30px"> </el-table-column>
         <el-table-column prop="type" label="Type" width="60px">
         </el-table-column>
@@ -12,8 +12,6 @@
         </el-table-column>
         <el-table-column prop="pages" label="PAGES" width="80px">
         </el-table-column>
-        <!-- 备注栏 -->
-        <el-table-column label="Remark" width="85px"></el-table-column>
         <!-- 操作栏 -->
         <el-table-column label="Control">
           <template slot-scope="scope">
@@ -46,7 +44,7 @@
               content="skip to readingnotes"
               placement="top"
               :enterable="false"
-              ><el-button type="text">
+              ><el-button type="text" @click="$emit('skip',scope.row.b_name)">
                 <i
                   class="iconfont icon-attachment"
                   style="color: #7288ac"
