@@ -39,6 +39,9 @@ const ProfileSchema = new Schema({
   progress: {
     type: Number,
   },
+  bookshelf: {
+    type:String
+  }
 });
 
 module.exports = Profile = mongoose.model("profile", ProfileSchema);

@@ -36,6 +36,7 @@ router.post(
         if (req.body.remark) profileFields.remark = req.body.remark;
         if (req.body.publish) profileFields.publish = req.body.publish;
         if (req.body.pages) profileFields.pages = req.body.pages;
+        if (req.body.bookshelf) profileFields.bookshelf = req.body.bookshelf;
         if (!req.body.pages) profileFields.pages = 0;
         if (req.body.current_p) profileFields.current_p = req.body.current_p;
         if (!req.body.current_p || req.body.current_p === 0) {
@@ -166,6 +167,7 @@ router.put(
     if (req.body.pages) profileFields.pages = req.body.pages;
     if (req.body.current_p) profileFields.current_p = req.body.current_p;
     if (req.body.progress) profileFields.progress = req.body.progress;
+    if (req.body.bookshelf) profileFields.bookshelf = req.body.bookshelf;
     if (!req.body.progress) profileFields.progress = 0;
 
     Profile.findOneAndUpdate(
@@ -198,9 +200,6 @@ router.delete(
         profile.save().then((profile) => res.json(profile));
       })
       .catch((err) => res.json(err));
-    Profile.findOneAndRemove({ _id: req.params.id }, (profile) =>
-      res.json(profile)
-    ).catch((err) => res.json(err));
   }
 );
 
@@ -211,8 +210,10 @@ router.get(
   "/find/:value/:query",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    var str="^.*"+req.params.query+".*$"
+    var reg = new RegExp(str)
     if (req.params.value === "1") {
-      Profile.find({ b_name: req.params.query })
+      Profile.find({ b_name: reg})
         .then((profile) => {
           if (!profile) {
             return res.json("没找到这条内容呀@_@");
@@ -229,7 +230,7 @@ router.get(
         .catch((err) => console.log(err));
     }
     if (req.params.value === "2") {
-      Profile.find({ author: req.params.query })
+      Profile.find({ author: reg })
         .then((profile) => {
           if (!profile) {
             return res.json("没找到这条内容呀@_@");
@@ -246,7 +247,7 @@ router.get(
         .catch((err) => console.log(err));
     }
     if (req.params.value === "3") {
-      Profile.find({ type: req.params.query })
+      Profile.find({ type: reg })
         .then((profile) => {
           if (!profile) {
             return res.json("没找到这条内容呀@_@");

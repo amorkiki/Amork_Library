@@ -12,8 +12,8 @@ app.use(require("cors")());
 const users = require("./routers/api/users");
 //引入profiles.js
 const profiles = require("./routers/api/profiles");
-//引入categories.js
-const categories = require("./routers/api/categories");
+//引入bookshelf.js
+const bookshelf = require("./routers/api/bookshelf");
 //引入diaries.js
 const diaries = require("./routers/api/diaries");
 
@@ -44,11 +44,11 @@ app.get("/", (req, res) => {
 // 使用routers
 app.use("/api/users", users);
 app.use("/api/profiles", profiles);
-app.use("/api/categories", categories);
+app.use("/api/bookshelf", bookshelf);
 app.use("/api/diaries", diaries);
 
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`@_@Server is running on port ${port}`);
 });
