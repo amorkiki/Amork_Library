@@ -41,6 +41,15 @@ const ProfileSchema = new Schema({
   },
   bookshelf: {
     type:String
+  },
+  cover_img: {
+    type:String
+  },
+  r_status:{
+    type:String
+  },
+  publish_date:{
+    type:String
   }
 });
 

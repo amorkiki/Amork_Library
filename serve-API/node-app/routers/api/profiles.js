@@ -37,6 +37,9 @@ router.post(
         if (req.body.publish) profileFields.publish = req.body.publish;
         if (req.body.pages) profileFields.pages = req.body.pages;
         if (req.body.bookshelf) profileFields.bookshelf = req.body.bookshelf;
+        if (req.body.cover_img) profileFields.cover_img = req.body.cover_img;
+        if (req.body.publish_date) profileFields.publish_date = req.body.publish_date;
+        if (req.body.r_status) profileFields.r_status = req.body.r_status;
         if (!req.body.pages) profileFields.pages = 0;
         if (req.body.current_p) profileFields.current_p = req.body.current_p;
         if (!req.body.current_p || req.body.current_p === 0) {
@@ -164,10 +167,13 @@ router.put(
     if (req.body.isbn_num) profileFields.isbn_num = req.body.isbn_num;
     if (req.body.remark) profileFields.remark = req.body.remark;
     if (req.body.publish) profileFields.publish = req.body.publish;
+    if (req.body.publish_date) profileFields.publish = req.body.publish_date;
     if (req.body.pages) profileFields.pages = req.body.pages;
     if (req.body.current_p) profileFields.current_p = req.body.current_p;
     if (req.body.progress) profileFields.progress = req.body.progress;
     if (req.body.bookshelf) profileFields.bookshelf = req.body.bookshelf;
+    if (req.body.r_status) profileFields.bookshelf = req.body.r_status;
+    if (req.body.cover_img) profileFields.cover_img = req.body.cover_img;
     if (!req.body.progress) profileFields.progress = 0;
 
     Profile.findOneAndUpdate(

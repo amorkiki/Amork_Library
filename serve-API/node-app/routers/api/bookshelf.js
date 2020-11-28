@@ -14,7 +14,8 @@ const Bookshelf = require("../../models/Bookshelf");
 // $route GET api/bookshelf
 // @desc  获取所有书架
 // @access public
-router.get("/",
+router.get(
+  "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
   Bookshelf.find()
@@ -22,7 +23,7 @@ router.get("/",
       if (!bookshelf) {
         return res.json("没找到任何内容呀@_@");
       }
-      res.json(JSON.parse(JSON.stringify(bookshelf)));
+      res.json(bookshelf);
     })
     .catch((err) => res.json(err));
 });
