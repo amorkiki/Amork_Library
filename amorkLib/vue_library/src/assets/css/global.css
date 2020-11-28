@@ -23,6 +23,7 @@ body,
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   margin-top: 15px;
   font-size: 14px !important;
+  min-width: '700px';
 }
 .el-table .cell {
   text-align: center;

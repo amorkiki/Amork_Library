@@ -266,6 +266,7 @@ export default {
             saveAsImage: { show: true }
           }
         },
+        tooltip: {},
         visualMap: {
           inRange: {
             color: ['#F2F4F6', '#EFDE79', '#73BABC', '#7288AC', '#91CA8D', '#F4A042']

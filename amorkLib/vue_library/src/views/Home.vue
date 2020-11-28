@@ -3,6 +3,7 @@
     <!-- 头部区域 -->
     <el-header >
       <span>Welcome to reading track system ^_^</span>
+      <div><i class="iconfont icon-clock"><span id="instantTime"></span></i></div>
       <el-button type="info" @click="logout"> Esc</el-button>
     </el-header>
     <!-- 页面主体区域 -->
@@ -163,7 +164,27 @@ export default {
     saveNavState(activePath) {
       window.sessionStorage.setItem('activePath', activePath)
       this.activePath = activePath
+    },
+    // 显示当前时间
+    getInsTime() {
+      let t = null
+      t = setTimeout(time, 1000)// 開始运行
+      function time() {
+        clearTimeout(t)// 先清除定时器
+        const dt = new Date()
+        const y = dt.getFullYear()
+        const mon = dt.getMonth() + 1
+        const day = dt.getDate()
+        const h = dt.getHours()
+        const m = dt.getMinutes()
+        const s = dt.getSeconds()
+        document.querySelector('#instantTime').innerHTML = y + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s
+        t = setTimeout(time, 1000) // 设定定时器，循环运行
+      }
     }
+  },
+  created() {
+    this.getInsTime()
   }
 }
 </script>
@@ -178,6 +199,14 @@ export default {
   padding: 25px;
   color: #fff;
   align-items: center;
+  #instantTime {
+    margin-left: 10px;
+    text-align: bottom;
+    line-height: 30px;
+    font-size: 15px;
+    font-family: Marker Felt;
+    letter-spacing: 1px;
+  }
   > span {
     margin-left: 10px;
     text-align: center;

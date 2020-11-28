@@ -6,6 +6,90 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "17812001",
+      "name": "阴天",
+      "font_class": "yintian2",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    },
+    {
+      "icon_id": "17812002",
+      "name": "多云",
+      "font_class": "duoyun1",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "17816092",
+      "name": "多云转晴",
+      "font_class": "duoyunzhuanqing",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "17827981",
+      "name": "沙尘暴",
+      "font_class": "shachenbao",
+      "unicode": "e675",
+      "unicode_decimal": 58997
+    },
+    {
+      "icon_id": "17829189",
+      "name": "雾",
+      "font_class": "wu1",
+      "unicode": "e678",
+      "unicode_decimal": 59000
+    },
+    {
+      "icon_id": "17829302",
+      "name": "龙卷风",
+      "font_class": "longjuanfeng",
+      "unicode": "e679",
+      "unicode_decimal": 59001
+    },
+    {
+      "icon_id": "17919268",
+      "name": "雷阵雨伴有冰雹",
+      "font_class": "leizhenyubanyoubingbao",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
+      "icon_id": "17920510",
+      "name": "大暴雨",
+      "font_class": "dabaoyu",
+      "unicode": "e67b",
+      "unicode_decimal": 59003
+    },
+    {
+      "icon_id": "17922583",
+      "name": "晴",
+      "font_class": "sunny",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
+      "icon_id": "17922586",
+      "name": "雪",
+      "font_class": "snow",
+      "unicode": "e682",
+      "unicode_decimal": 59010
+    },
+    {
+      "icon_id": "17922587",
+      "name": "风",
+      "font_class": "wind",
+      "unicode": "e683",
+      "unicode_decimal": 59011
+    },
+    {
+      "icon_id": "17922588",
+      "name": "雨夹雪",
+      "font_class": "sleet",
+      "unicode": "e684",
+      "unicode_decimal": 59012
+    },
+    {
       "icon_id": "1106630",
       "name": "天气",
       "font_class": "tianqi1",
